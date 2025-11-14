@@ -55,6 +55,34 @@
 shiny::runApp("path/to/your/app")`
 ```
 
+## Repository structure
+
+```bash
+sia.project.1.wi.shiny/
+├─ production/
+│  └─ app/
+│     ├─ data/
+│     ├─ functions/
+│     ├─ modules/
+│     ├─ www/
+│     ├─ app.R
+│     └─ global.R
+│
+├─ test/
+│  └─ app/
+│     ├─ data/
+│     ├─ functions/
+│     ├─ modules/
+│     ├─ www/
+│     ├─ app.R
+│     └─ global.R
+│
+├─ .gitignore
+├─ LICENSE
+├─ README.md
+└─ project.1.sia.wi.shiny.Rproj
+```
+
 ## Support
 
 <p align="justify">
@@ -89,8 +117,7 @@ shiny::runApp("path/to/your/app")`
 - <a href="https://stress-in-action.nl/terms-of-use/">Stress in Action</a> - Copyright holder 
 
 - {bs4Dash} - [https://github.com/RinteRface/bs4Dash](https://github.com/RinteRface/bs4Dash)  
-- {dplyr} - [https://github.com/tidyverse/dplyr](https://github.com/tidyverse/dplyr)  
-- {DT} - [https://github.com/rstudio/DT](https://github.com/rstudio/DT)  
+- {dplyr} - [https://github.com/tidyverse/dplyr](https://github.com/tidyverse/dplyr)   
 - {emayili} - [https://github.com/datawookie/emayili](https://github.com/datawookie/emayili)  
 - {fresh} - [https://github.com/dreamRs/fresh](https://github.com/dreamRs/fresh)  
 - {here} - [https://github.com/r-lib/here](https://github.com/r-lib/here)  
