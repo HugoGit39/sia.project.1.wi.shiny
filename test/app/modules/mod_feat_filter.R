@@ -4,7 +4,232 @@
 #
 #############################################################################################
 
-#' Module UI for Filtering Wearables
+#' #' Module UI for Filtering Wearables
+#' mod_feat_fil_ui <- function(id) {
+#'   ns <- NS(id)
+#'
+#'   tagList(
+#'     fluidRow(
+#'       column(
+#'         width = 3,
+#'         bs4Card(
+#'           title = "Feature Filter",
+#'           status = "primary",
+#'           width = 12,
+#'           collapsible = FALSE,
+#'           solidHeader = TRUE,
+#'           div(
+#'             style = "text-align: center; margin-bottom: 10px;",
+#'             downloadButton(ns("download_filter_settings"), "Download Filter Settings")
+#'           ),
+#'           div(
+#'             style = "text-align: center; margin-bottom: 10px;",
+#'             actionButton(
+#'               inputId = ns("reset_feat_filter"),
+#'               label = "Reset Filter",
+#'               status = "danger",
+#'               outline = TRUE,
+#'               size = "sm",
+#'               flat = TRUE,
+#'               icon = NULL,
+#'               block = TRUE,
+#'               width = "50%",
+#'               style = "border-width: 2px"
+#'             )
+#'           ),
+#'           bs4Card(title = "SiA Expert Score",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   solidHeader = TRUE,
+#'                   collapsible = FALSE,
+#'                   sliderInput(
+#'                     ns("sia_es_long"),
+#'                     label = "Long-Term Expert Score",
+#'                     min   = 0,
+#'                     max   = 10,
+#'                     value = c(0, 10),
+#'                     step  = 0.1),
+#'                   sliderInput(
+#'                     ns("sia_es_short"),
+#'                     label = "Short-Term Expert Score",
+#'                     min   = 0,
+#'                     max   = 10,
+#'                     value = c(0, 10),
+#'                     step  = 0.1),
+#'                   tags$div(
+#'                     tags$label("Exclude missing SiA scores"),
+#'                     switchInput(inputId = ns("exclude_na_sia"), onLabel = "YES", offLabel = "NO",
+#'                                 value = FALSE, size = "sm", onStatus = "secondary", offStatus = "primary")
+#'                   )
+#'           ),
+#'           bs4Card(title = "General Device Information",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   collapsible = FALSE,
+#'                   selectInput(ns("manufacturer"), "Manufacturer", choices = NULL, multiple = TRUE),
+#'                   selectInput(ns("model"), "Model", choices = NULL, multiple = TRUE),
+#'                   airDatepickerInput(ns("release_date"), "Release Year Range",
+#'                                      range = TRUE, view = "years", minView = "years",
+#'                                      dateFormat = "yyyy",
+#'                                      value = c(min(sia_df$release_date, na.rm = TRUE),
+#'                                                max(sia_df$release_date, na.rm = TRUE))),
+#'                   selectInput(ns("market_status"), "Market Status", choices = NULL, multiple = TRUE),
+#'                   selectInput(ns("main_use"), "Main Use", choices = NULL, multiple = TRUE),
+#'                   sliderInput(
+#'                     ns("device_cost"),
+#'                     label = "Device Cost (€)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$device_cost, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$device_cost, na.rm = TRUE)),
+#'                     step  = 1
+#'                   ),
+#'                   selectInput(ns("wearable_type"), "Type", choices = NULL, multiple = TRUE),
+#'                   selectInput(ns("location"), "Location", choices = NULL, multiple = TRUE),
+#'                   sliderInput(
+#'                     ns("weight"),
+#'                     label = "Weight (g)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$weight, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$weight, na.rm = TRUE)),
+#'                     step  = 1
+#'                   ),
+#'                   selectInput(ns("size"), "Size", choices = NULL, multiple = TRUE)
+#'           ),
+#'           bs4Card(title = "Technical Specifications",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   collapsible = FALSE,
+#'                   prettyCheckbox(ns("water_resistance"), label = "Water Resistant", icon = icon("check"), status = "primary"),
+#'                   sliderInput(
+#'                     ns("battery_life"),
+#'                     label = "Battery Life (hrs)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$battery_life, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$battery_life, na.rm = TRUE)),
+#'                     step  = 1),
+#'                   selectInput(ns("charging_method"), "Charging Method", choices = NULL, multiple = TRUE),
+#'                   sliderInput(
+#'                     ns("charging_duration"),
+#'                     label = "Charging Duration (min)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$charging_duration, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$charging_duration, na.rm = TRUE)),
+#'                     step  = 1
+#'                   ),
+#'                   prettyCheckbox(ns("bio_cueing"), label = "Bio Cueing", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("bio_feedback"), label = "Bio Feedback", icon = icon("check"), status = "primary")
+#'           ),
+#'           bs4Card(title = "Signals",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   collapsible = FALSE,
+#'                   prettyCheckbox(ns("ppg"), label = "Photoplethysmogram (PPG)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("ecg"), label = "Electrocardiogram (ECG)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("icg"), label = "Impedance cardiography (ICG)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("emg"), label = "Electromyography (EMG)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("respiration"), label = "Respiration", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("eda"), label = "Electrodermal activity (EDA)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("eeg"), label = "Electroencephalography (EEG)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("bp"), label = "Blood Pressure", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("accelerometer"), label = "Accelerometer", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("gyroscope"), label = "Gyroscope", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("gps"), label = "Global Positioning System (GPS)", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("skin_temperature"), label = "Skin Temperature", icon = icon("check"), status = "primary"),
+#'                   selectInput(ns("other_signals"), "Other Signals", choices = NULL, multiple = TRUE)
+#'           ),
+#'           bs4Card(title = "Data Access",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   collapsible = FALSE,
+#'                   prettyCheckbox(ns("raw_data_available"), label = "Raw Data", icon = icon("check"), status = "primary"),
+#'                   selectInput(ns("data_trans_method"), "Data Transmission Method", choices = NULL, multiple = TRUE),
+#'                   prettyCheckbox(ns("int_storage_met"), label = "Internal Storage", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("server_data_storage"), label = "Server Storage", icon = icon("check"), status = "primary"),
+#'                   sliderInput(
+#'                     ns("dev_storage_cap_mb"),
+#'                     label = "Storage Capacity (MB)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$dev_storage_cap_mb, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$dev_storage_cap_mb, na.rm = TRUE)),
+#'                     step  = 1),
+#'                   sliderInput(
+#'                     ns("dev_storage_cap_hrs"),
+#'                     label = "Storage Capacity (hrs)",
+#'                     min   = 0,
+#'                     max   = max(sia_df$dev_storage_cap_hrs, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$dev_storage_cap_hrs, na.rm = TRUE)),
+#'                     step  = 1),
+#'                   prettyCheckbox(ns("gdpr_comp"), label = "GDPR Compliant", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("fda_app_clear"), label = "FDA Approved", icon = icon("check"), status = "primary"),
+#'                   prettyCheckbox(ns("ce_app_label"), label = "CE Label", icon = icon("check"), status = "primary")
+#'           ),
+#'           bs4Card(title = "Validation, Reliability & Usability",
+#'                   width = 12,
+#'                   status = "secondary",
+#'                   collapsible = FALSE,
+#'                   selectInput(ns("level_validation"), "Validation Level", choices = NULL, multiple = TRUE),
+#'                   sliderInput(
+#'                     ns("no_studies_val_rel_reviewed"),
+#'                     label = "# Validation/Reliability Studies",
+#'                     min   = 0,
+#'                     max   = max(sia_df$no_studies_val_rel_reviewed, na.rm = TRUE),
+#'                     value = c(0, max(sia_df$no_studies_val_rel_reviewed, na.rm = TRUE)),
+#'                     step  = 1
+#'                   ),
+#'                   sliderInput(
+#'                     ns("no_studies_usab_reviewed"),
+#'                     label  = "# Usability Studies",
+#'                     min    = 0,
+#'                     max    = max(sia_df$no_studies_usab_reviewed, na.rm = TRUE),
+#'                     value  = c(0, max(sia_df$no_studies_usab_reviewed, na.rm = TRUE)),
+#'                     step   = 1
+#'                   )
+#'           )
+#'         )
+#'       ),
+#'       column(
+#'         width = 9,
+#'         bs4Card(
+#'           title = "Filtered Results",
+#'           status = "primary",
+#'           width = 12,
+#'           collapsible = FALSE,
+#'           solidHeader = TRUE,
+#'           div(
+#'             style = "text-align: center; margin-bottom: 10px;",
+#'             downloadButton(ns("download_data"), "Download Filtered Results")
+#'           ),
+#'           reactableOutput(ns("feat_filtered_table")) %>% withSpinner(),
+#'           footer = tags$div(
+#'             "Source: Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. ",
+#'             "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information. ",
+#'             tags$em("Behav Res Methods."),
+#'             " 2025 May 13;57(6):171. doi: ",
+#'             tags$a(
+#'               href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
+#'               target = "_blank",
+#'               "10.3758/s13428-025-02685-4"
+#'             ),
+#'             "; PMID: 40360861; PMCID: ",
+#'             tags$a(
+#'               href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075381/",
+#'               target = "_blank",
+#'               "PMC12075381"
+#'             ),
+#'             style = "font-family: sans-serif; font-size: 10pt; color: #8C8C8C;"
+#'           )
+#'         )
+#'       )
+#'     )
+#'   )
+#' }
+#'
+#' ############################################################################################
+#
+#  Module UI for Filtering Wearables (updated for long-format df_shiny_wi_subset)
+#
+############################################################################################
+
 mod_feat_fil_ui <- function(id) {
   ns <- NS(id)
 
@@ -37,156 +262,180 @@ mod_feat_fil_ui <- function(id) {
               style = "border-width: 2px"
             )
           ),
-          bs4Card(title = "SiA Expert Score",
-                  width = 12,
-                  status = "secondary",
-                  solidHeader = TRUE,
-                  collapsible = FALSE,
-                  sliderInput(
-                    ns("sia_es_long"),
-                    label = "Long-Term Expert Score",
-                    min   = 0,
-                    max   = 10,
-                    value = c(0, 10),
-                    step  = 0.1),
-                  sliderInput(
-                    ns("sia_es_short"),
-                    label = "Short-Term Expert Score",
-                    min   = 0,
-                    max   = 10,
-                    value = c(0, 10),
-                    step  = 0.1),
-                  tags$div(
-                    tags$label("Exclude missing SiA scores"),
-                    switchInput(inputId = ns("exclude_na_sia"), onLabel = "YES", offLabel = "NO",
-                                value = FALSE, size = "sm", onStatus = "secondary", offStatus = "primary")
-                  )
+
+          # * SiA Expert Scores ----
+          bs4Card(
+            title = "SiA Expert Score",
+            width = 12,
+            status = "secondary",
+            solidHeader = TRUE,
+            collapsible = FALSE,
+            sliderInput(
+              ns("long_term_all_score"),
+              label = "Long-Term Expert Score",
+              min   = 0,
+              max   = 10,
+              value = c(0, 10),
+              step  = 0.1
+            ),
+            sliderInput(
+              ns("short_term_all_score"),
+              label = "Short-Term Expert Score",
+              min   = 0,
+              max   = 10,
+              value = c(0, 10),
+              step  = 0.1
+            ),
+            tags$div(
+              tags$label("Exclude missing SiA scores"),
+              switchInput(
+                inputId = ns("exclude_na_sia"),
+                onLabel = "YES", offLabel = "NO",
+                value = FALSE, size = "sm",
+                onStatus = "secondary", offStatus = "primary"
+              )
+            )
           ),
-          bs4Card(title = "General Device Information",
-                  width = 12,
-                  status = "secondary",
-                  collapsible = FALSE,
-                  selectInput(ns("manufacturer"), "Manufacturer", choices = NULL, multiple = TRUE),
-                  selectInput(ns("model"), "Model", choices = NULL, multiple = TRUE),
-                  airDatepickerInput(ns("release_date"), "Release Year Range",
-                                     range = TRUE, view = "years", minView = "years",
-                                     dateFormat = "yyyy",
-                                     value = c(min(sia_df$release_date, na.rm = TRUE),
-                                               max(sia_df$release_date, na.rm = TRUE))),
-                  selectInput(ns("market_status"), "Market Status", choices = NULL, multiple = TRUE),
-                  selectInput(ns("main_use"), "Main Use", choices = NULL, multiple = TRUE),
-                  sliderInput(
-                    ns("device_cost"),
-                    label = "Device Cost (€)",
-                    min   = 0,
-                    max   = max(sia_df$device_cost, na.rm = TRUE),
-                    value = c(0, max(sia_df$device_cost, na.rm = TRUE)),
-                    step  = 1
-                  ),
-                  selectInput(ns("wearable_type"), "Type", choices = NULL, multiple = TRUE),
-                  selectInput(ns("location"), "Location", choices = NULL, multiple = TRUE),
-                  sliderInput(
-                    ns("weight"),
-                    label = "Weight (g)",
-                    min   = 0,
-                    max   = max(sia_df$weight, na.rm = TRUE),
-                    value = c(0, max(sia_df$weight, na.rm = TRUE)),
-                    step  = 1
-                  ),
-                  selectInput(ns("size"), "Size", choices = NULL, multiple = TRUE)
+
+          # * General Device Information ----
+          bs4Card(
+            title = "General Device Information",
+            width = 12,
+            status = "secondary",
+            collapsible = FALSE,
+            selectInput(ns("manufacturer"), "Manufacturer", choices = NULL, multiple = TRUE),
+            selectInput(ns("model"), "Model", choices = NULL, multiple = TRUE),
+            airDatepickerInput(
+              ns("release_year"),
+              "Release Year Range",
+              range = TRUE,
+              view = "years",
+              minView = "years",
+              dateFormat = "yyyy",
+              value = c(min(sia_df$release_year, na.rm = TRUE),
+                        max(sia_df$release_year, na.rm = TRUE))
+            ),
+            selectInput(ns("market_status"), "Market Status", choices = NULL, multiple = TRUE),
+            selectInput(ns("main_use"), "Main Use", choices = NULL, multiple = TRUE),
+            sliderInput(
+              ns("device_cost"),
+              label = "Device Cost (€)",
+              min   = 0,
+              max   = max(sia_df$device_cost, na.rm = TRUE),
+              value = c(0, max(sia_df$device_cost, na.rm = TRUE)),
+              step  = 1
+            ),
+            selectInput(ns("wearable_type"), "Type", choices = NULL, multiple = TRUE),
+            selectInput(ns("location"), "Location", choices = NULL, multiple = TRUE)
           ),
-          bs4Card(title = "Technical Specifications",
-                  width = 12,
-                  status = "secondary",
-                  collapsible = FALSE,
-                  prettyCheckbox(ns("water_resistance"), label = "Water Resistant", icon = icon("check"), status = "primary"),
-                  sliderInput(
-                    ns("battery_life"),
-                    label = "Battery Life (hrs)",
-                    min   = 0,
-                    max   = max(sia_df$battery_life, na.rm = TRUE),
-                    value = c(0, max(sia_df$battery_life, na.rm = TRUE)),
-                    step  = 1),
-                  selectInput(ns("charging_method"), "Charging Method", choices = NULL, multiple = TRUE),
-                  sliderInput(
-                    ns("charging_duration"),
-                    label = "Charging Duration (min)",
-                    min   = 0,
-                    max   = max(sia_df$charging_duration, na.rm = TRUE),
-                    value = c(0, max(sia_df$charging_duration, na.rm = TRUE)),
-                    step  = 1
-                  ),
-                  prettyCheckbox(ns("bio_cueing"), label = "Bio Cueing", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("bio_feedback"), label = "Bio Feedback", icon = icon("check"), status = "primary")
+
+          # * Technical Specifications ----
+          bs4Card(
+            title = "Technical Specifications",
+            width = 12,
+            status = "secondary",
+            collapsible = FALSE,
+            prettyCheckbox(ns("water_resistance_spec_boel_value"), label = "Water Resistant", icon = icon("check"), status = "primary"),
+            sliderInput(
+              ns("battery_life_spec_num_value"),
+              label = "Battery Life (hrs)",
+              min   = 0,
+              max   = max(sia_df$battery_life_spec_num_value, na.rm = TRUE),
+              value = c(0, max(sia_df$battery_life_spec_num_value, na.rm = TRUE)),
+              step  = 1
+            ),
+            sliderInput(
+              ns("charging_duration_spec_num_value"),
+              label = "Charging Duration (min)",
+              min   = 0,
+              max   = max(sia_df$charging_duration_spec_num_value, na.rm = TRUE),
+              value = c(0, max(sia_df$charging_duration_spec_num_value, na.rm = TRUE)),
+              step  = 1
+            ),
+            prettyCheckbox(ns("bio_cueing_spec_boel_value"), label = "Bio Cueing", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("bio_feedback_spec_boel_value"), label = "Bio Feedback", icon = icon("check"), status = "primary")
           ),
-          bs4Card(title = "Signals",
-                  width = 12,
-                  status = "secondary",
-                  collapsible = FALSE,
-                  prettyCheckbox(ns("ppg"), label = "Photoplethysmogram (PPG)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("ecg"), label = "Electrocardiogram (ECG)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("icg"), label = "Impedance cardiography (ICG)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("emg"), label = "Electromyography (EMG)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("respiration"), label = "Respiration", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("eda"), label = "Electrodermal activity (EDA)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("eeg"), label = "Electroencephalography (EEG)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("bp"), label = "Blood Pressure", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("accelerometer"), label = "Accelerometer", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("gyroscope"), label = "Gyroscope", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("gps"), label = "Global Positioning System (GPS)", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("skin_temperature"), label = "Skin Temperature", icon = icon("check"), status = "primary"),
-                  selectInput(ns("other_signals"), "Other Signals", choices = NULL, multiple = TRUE)
+
+          # * Signals ----
+          bs4Card(
+            title = "Signals",
+            width = 12,
+            status = "secondary",
+            collapsible = FALSE,
+            prettyCheckbox(ns("accelerometer_available"), label = "Accelerometer", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("bp_available"), label = "Blood Pressure", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("ecg_available"), label = "Electrocardiogram (ECG)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("eda_available"), label = "Electrodermal Activity (EDA)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("eeg_available"), label = "Electroencephalography (EEG)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("emg_available"), label = "Electromyography (EMG)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("gps_available"), label = "Global Positioning System (GPS)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("gyroscope_available"), label = "Gyroscope", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("icg_available"), label = "Impedance Cardiography (ICG)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("ppg_available"), label = "Photoplethysmogram (PPG)", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("respiration_available"), label = "Respiration", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("skin_temperature_available"), label = "Skin Temperature", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("other_signals_available"), label = "Other Signals", icon = icon("check"), status = "primary")
           ),
-          bs4Card(title = "Data Access",
-                  width = 12,
-                  status = "secondary",
-                  collapsible = FALSE,
-                  prettyCheckbox(ns("raw_data_available"), label = "Raw Data", icon = icon("check"), status = "primary"),
-                  selectInput(ns("data_trans_method"), "Data Transmission Method", choices = NULL, multiple = TRUE),
-                  prettyCheckbox(ns("int_storage_met"), label = "Internal Storage", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("server_data_storage"), label = "Server Storage", icon = icon("check"), status = "primary"),
-                  sliderInput(
-                    ns("dev_storage_cap_mb"),
-                    label = "Storage Capacity (MB)",
-                    min   = 0,
-                    max   = max(sia_df$dev_storage_cap_mb, na.rm = TRUE),
-                    value = c(0, max(sia_df$dev_storage_cap_mb, na.rm = TRUE)),
-                    step  = 1),
-                  sliderInput(
-                    ns("dev_storage_cap_hrs"),
-                    label = "Storage Capacity (hrs)",
-                    min   = 0,
-                    max   = max(sia_df$dev_storage_cap_hrs, na.rm = TRUE),
-                    value = c(0, max(sia_df$dev_storage_cap_hrs, na.rm = TRUE)),
-                    step  = 1),
-                  prettyCheckbox(ns("gdpr_comp"), label = "GDPR Compliant", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("fda_app_clear"), label = "FDA Approved", icon = icon("check"), status = "primary"),
-                  prettyCheckbox(ns("ce_app_label"), label = "CE Label", icon = icon("check"), status = "primary")
+
+          # * Data Access ----
+          bs4Card(
+            title = "Data Access",
+            width = 12,
+            status = "secondary",
+            collapsible = FALSE,
+            prettyCheckbox(ns("raw_data_available_spec_boel_value"), label = "Raw Data Available", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("int_storage_met_spec_boel_value"), label = "Internal Storage", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("server_data_storage_spec_boel_value"), label = "Server Storage", icon = icon("check"), status = "primary"),
+            sliderInput(
+              ns("dev_storage_cap_mb_spec_num_value"),
+              label = "Storage Capacity (MB)",
+              min   = 0,
+              max   = max(sia_df$dev_storage_cap_mb_spec_num_value, na.rm = TRUE),
+              value = c(0, max(sia_df$dev_storage_cap_mb_spec_num_value, na.rm = TRUE)),
+              step  = 1
+            ),
+            sliderInput(
+              ns("dev_storage_cap_hr_spec_num_value"),
+              label = "Storage Capacity (hrs)",
+              min   = 0,
+              max   = max(sia_df$dev_storage_cap_hr_spec_num_value, na.rm = TRUE),
+              value = c(0, max(sia_df$dev_storage_cap_hr_spec_num_value, na.rm = TRUE)),
+              step  = 1
+            ),
+            prettyCheckbox(ns("gdpr_compliance_spec_boel_value"), label = "GDPR Compliant", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("fda_clearance_spec_boel_value"), label = "FDA Cleared", icon = icon("check"), status = "primary"),
+            prettyCheckbox(ns("ce_marking_spec_boel_value"), label = "CE Marked", icon = icon("check"), status = "primary")
           ),
-          bs4Card(title = "Validation, Reliability & Usability",
-                  width = 12,
-                  status = "secondary",
-                  collapsible = FALSE,
-                  selectInput(ns("level_validation"), "Validation Level", choices = NULL, multiple = TRUE),
-                  sliderInput(
-                    ns("no_studies_val_rel_reviewed"),
-                    label = "# Validation/Reliability Studies",
-                    min   = 0,
-                    max   = max(sia_df$no_studies_val_rel_reviewed, na.rm = TRUE),
-                    value = c(0, max(sia_df$no_studies_val_rel_reviewed, na.rm = TRUE)),
-                    step  = 1
-                  ),
-                  sliderInput(
-                    ns("no_studies_usab_reviewed"),
-                    label  = "# Usability Studies",
-                    min    = 0,
-                    max    = max(sia_df$no_studies_usab_reviewed, na.rm = TRUE),
-                    value  = c(0, max(sia_df$no_studies_usab_reviewed, na.rm = TRUE)),
-                    step   = 1
-                  )
+
+          # * Validation, Reliability & Usability ----
+          bs4Card(
+            title = "Validation, Reliability & Usability",
+            width = 12,
+            status = "secondary",
+            collapsible = FALSE,
+            sliderInput(
+              ns("usability_n_of_studies"),
+              label = "# Usability Studies",
+              min   = 0,
+              max   = max(sia_df$usability_n_of_studies, na.rm = TRUE),
+              value = c(0, max(sia_df$usability_n_of_studies, na.rm = TRUE)),
+              step  = 1
+            ),
+            sliderInput(
+              ns("validity_and_reliability_n_of_studies"),
+              label = "# Validity & Reliability Studies",
+              min   = 0,
+              max   = max(sia_df$validity_and_reliability_n_of_studies, na.rm = TRUE),
+              value = c(0, max(sia_df$validity_and_reliability_n_of_studies, na.rm = TRUE)),
+              step  = 1
+            ),
+            selectInput(ns("usability_evidence_level"), "Usability Evidence Level", choices = NULL, multiple = TRUE),
+            selectInput(ns("validity_and_reliability_evidence_level"), "Validity & Reliability Evidence Level", choices = NULL, multiple = TRUE)
           )
         )
       ),
+
+      # * Filtered results panel ----
       column(
         width = 9,
         bs4Card(
@@ -205,17 +454,11 @@ mod_feat_fil_ui <- function(id) {
             "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information. ",
             tags$em("Behav Res Methods."),
             " 2025 May 13;57(6):171. doi: ",
-            tags$a(
-              href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
-              target = "_blank",
-              "10.3758/s13428-025-02685-4"
-            ),
+            tags$a(href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
+                   target = "_blank", "10.3758/s13428-025-02685-4"),
             "; PMID: 40360861; PMCID: ",
-            tags$a(
-              href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075381/",
-              target = "_blank",
-              "PMC12075381"
-            ),
+            tags$a(href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075381/",
+                   target = "_blank", "PMC12075381"),
             style = "font-family: sans-serif; font-size: 10pt; color: #8C8C8C;"
           )
         )
@@ -223,6 +466,7 @@ mod_feat_fil_ui <- function(id) {
     )
   )
 }
+
 
 ############################################################################################
 #
@@ -234,50 +478,70 @@ mod_feat_fil_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    range_vars <- c("sia_es_long", "sia_es_short", "device_cost", "weight", "battery_life",
-                    "charging_duration", "dev_storage_cap_mb", "dev_storage_cap_hrs",
-                    "no_studies_val_rel_reviewed", "no_studies_usab_reviewed")
+    # --- 1. Updated variable groups ----
+    # range_vars <- c(
+    #   "long_term_all_score", "short_term_all_score",
+    #   "device_cost", "battery_life_spec_num_value",
+    #   "charging_duration_spec_num_value",
+    #   "dev_storage_cap_mb_spec_num_value", "dev_storage_cap_hr_spec_num_value",
+    #   "usability_n_of_studies", "validity_and_reliability_n_of_studies"
+    # )
+    #
+    # checkbox_vars <- c(
+    #   "water_resistance_spec_boel_value", "bio_cueing_spec_boel_value", "bio_feedback_spec_boel_value",
+    #   "accelerometer_available", "bp_available", "ecg_available", "eda_available",
+    #   "eeg_available", "emg_available", "gps_available", "gyroscope_available",
+    #   "icg_available", "ppg_available", "respiration_available", "skin_temperature_available",
+    #   "int_storage_met_spec_boel_value", "server_data_storage_spec_boel_value",
+    #   "raw_data_available_spec_boel_value",
+    #   "gdpr_compliance_spec_boel_value", "ce_marking_spec_boel_value", "fda_clearance_spec_boel_value"
+    # )
+    #
+    # select_inputs <- c(
+    #   "manufacturer", "model", "market_status", "main_use",
+    #   "wearable_type", "location",
+    #   "usability_evidence_level", "validity_and_reliability_evidence_level"
+    # )
 
-    checkbox_vars <- c("water_resistance", "bio_cueing", "bio_feedback", "ppg", "ecg", "icg",
-                       "emg", "respiration", "eda", "eeg", "bp", "accelerometer", "gyroscope",
-                       "gps", "skin_temperature", "int_storage_met", "server_data_storage",
-                       "raw_data_available", "gdpr_comp", "ce_app_label", "fda_app_clear")
+    # --- 1. Variable groups (reuse from global.R) ----
+    range_vars   <- c(bar_vars, numeric_vars)
+    checkbox_vars <- yn_vars
+    select_inputs <- intersect(names(sia_df), char_vars)
 
-    select_inputs <- c("manufacturer", "model", "market_status", "main_use",
-                       "wearable_type", "location", "size", "charging_method",
-                       "other_signals", "data_trans_method", "level_validation")
-
-    # Step 1: Filter for dropdowns
+    # --- 2. Filter for dropdowns ----
     filtered_for_dropdowns <- reactive({
       df <- data()
 
+      # Apply range filters
       for (var in range_vars) {
         df <- range_filter(df, var, input[[var]])
       }
 
-      # Release date range
-      if (!is.null(input$release_date[1]) && !is.null(input$release_date[2])) {
+      # Release year range
+      if (!is.null(input$release_year[1]) && !is.null(input$release_year[2])) {
         df <- df %>%
           filter(
-            is.na(release_date) |
-              (year(release_date) >= year(input$release_date[1]) &
-                 year(release_date) <= year(input$release_date[2]))
+            is.na(release_year) |
+              (year(release_year) >= year(input$release_year[1]) &
+                 year(release_year) <= year(input$release_year[2]))
           )
       }
 
+      # Apply checkboxes
       for (var in checkbox_vars) {
         df <- checkbox_filter(df, var, input[[var]])
       }
 
-      # Exclude rows with missing SIA scores if checkbox is ticked
+      # Exclude missing SiA scores if needed
       if (isTRUE(input$exclude_na_sia)) {
-        df <- df %>% filter(!is.na(sia_es_short), !is.na(sia_es_long))
+        df <- df %>%
+          filter(!is.na(short_term_all_score), !is.na(long_term_all_score))
       }
 
       df
     })
 
-    # Step 2: Update selectInput options
+    # --- 3. Dynamically update selectInput options ----
     observe({
       df <- filtered_for_dropdowns()
       for (input_id in select_inputs) {
@@ -290,13 +554,15 @@ mod_feat_fil_server <- function(id, data) {
         }
         valid_choices <- sort(unique(df_filtered[[input_id]]))
         selected_now <- input[[input_id]]
-        updateSelectInput(session, input_id,
-                          choices = valid_choices,
-                          selected = selected_now[selected_now %in% valid_choices])
+        updateSelectInput(
+          session, input_id,
+          choices = valid_choices,
+          selected = selected_now[selected_now %in% valid_choices]
+        )
       }
     })
 
-    # Step 3: Apply full filtering
+    # --- 4. Apply full filtering ----
     filtered_data <- reactive({
       df <- filtered_for_dropdowns()
       for (var in select_inputs) {
@@ -305,52 +571,43 @@ mod_feat_fil_server <- function(id, data) {
       df
     })
 
-    # Step 4: Reset filters
+    # --- 5. Reset filters ----
     observeEvent(input$reset_feat_filter, {
       for (var in range_vars) {
-        if (var %in% c("sia_es_long", "sia_es_short")) {
+        if (var %in% c("long_term_all_score", "short_term_all_score")) {
           updateSliderInput(session, var, value = c(0, 10))
         } else {
           updateSliderInput(session, var, value = c(0, max(sia_df[[var]], na.rm = TRUE)))
         }
       }
 
-      updateAirDateInput(session, "release_date",
+      updateAirDateInput(session, "release_year",
                          value = c(
-                           min(sia_df$release_date, na.rm = TRUE),
-                           max(sia_df$release_date, na.rm = TRUE)
+                           min(sia_df$release_year, na.rm = TRUE),
+                           max(sia_df$release_year, na.rm = TRUE)
                          ))
 
       lapply(checkbox_vars, function(id) updatePrettyCheckbox(session, id, value = FALSE))
-
       lapply(select_inputs, function(id) updateSelectInput(session, id, selected = character(0)))
-
       updateSwitchInput(session, "exclude_na_sia", value = FALSE)
-
     })
 
-    # Step 5: Render table
+    # --- 6. Render filtered reactable ----
     output$feat_filtered_table <- renderReactable({
       df <- filtered_data()
 
-      # Format release date to year only
-      if ("release_date" %in% names(df)) {
-        df$release_date <- format(df$release_date, "%Y")
+      # Format release year
+      if ("release_year" %in% names(df)) {
+        df$release_year <- format(df$release_year, "%Y")
       }
 
-      #create bars
-      bar_column_defs <- func_bar_column_defs(df, bar_vars, rename_map)
-
-      #create yes/np
-      yn_column_defs <- func_yn_column_defs(yn_vars, rename_map)
-
-      #create colored numerical cells
+      # Create reactable column definitions
+      bar_column_defs     <- func_bar_column_defs(df, bar_vars, rename_map)
+      yn_column_defs      <- func_yn_column_defs(yn_vars, rename_map)
       numeric_column_defs <- func_numeric_column_defs(df, numeric_vars, rename_map, numeric_var_ranges)
+      char_column_defs    <- func_char_column_defs(char_vars, rename_map)
 
-      #char columns rename
-      char_column_defs <- func_char_column_defs(char_vars, rename_map)
-
-      # Render table and hide 'id' column
+      # Render table
       reactable(
         df,
         columns = c(
@@ -360,14 +617,14 @@ mod_feat_fil_server <- function(id, data) {
               sticky = "left",
               style = sticky_style,
               headerStyle = sticky_style,
-              minWidth = 200
+              minWidth = 180
             ),
             model = colDef(
               name = "Model",
               sticky = "left",
               style = sticky_style,
               headerStyle = sticky_style,
-              minWidth = 200
+              minWidth = 180
             )
           ),
           bar_column_defs,
@@ -375,51 +632,41 @@ mod_feat_fil_server <- function(id, data) {
           numeric_column_defs,
           char_column_defs
         ),
-        defaultColDef = colDef(
-          footer = function(values, name) {
-            div(rename_map[[name]] %||% name, style = list(fontWeight = 600))
-          }
-        ),
-        defaultSorted = "manufacturer",
         bordered = TRUE,
         highlight = TRUE,
-        striped = FALSE,
         pagination = TRUE,
         searchable = TRUE,
         resizable = TRUE,
         fullWidth = TRUE,
+        striped = FALSE,
+        defaultSorted = "manufacturer",
         style = list(maxHeight = "1000px", overflowY = "auto")
       )
     })
 
-    # Step 6: Download
+    # --- 7. Download filtered data ----
     output$download_data <- downloadHandler(
       filename = function() paste0("sia_feature_filter_data_", format(Sys.Date(), "%Y%m%d"), ".csv"),
       content = function(file) {
-        # write the data
         write.csv(filtered_data(), file, row.names = FALSE, na = "")
-
-        # append the footer message (as comment lines)
         cat(
           "\n# Citation terms.\n",
           "# Thank you for using the Stress-in-Action Wearable Database!\n",
           "# If you use the SiA-WD and/or this web app you must cite:\n",
-          "# Schoenmakers M Saygin M Sikora M Vaessen T Noordzij M de Geus E. Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical reliability validity and usability information. Behav Res Methods. 2025 May 13 57(6):171. doi: 10.3758/s13428-025-02685-4. PMID: 40360861 PMCID: PMC12075381.\n",
-          "# [Shiny paper comming soon]\n",
+          "# Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical reliability validity and usability information. Behav Res Methods. 2025 May 13 57(6):171. doi: 10.3758/s13428-025-02685-4. PMID: 40360861 PMCID: PMC12075381.\n",
           file = file, append = TRUE, sep = ""
         )
       },
       contentType = "text/csv"
     )
 
-
-    # Step 7: Download filter settings
+    # --- 8. Download filter settings ----
     output$download_filter_settings <- downloadHandler(
       filename = function() paste0("sia_filter_settings_", format(Sys.Date(), "%Y%m%d"), ".csv"),
       content = function(file) {
         settings <- list()
 
-        # Sliders (rounded to integers)
+        # Sliders
         for (var in range_vars) {
           range_vals <- as.integer(round(input[[var]]))
           settings[[var]] <- paste(range_vals[1], range_vals[2], sep = "|")
@@ -436,208 +683,32 @@ mod_feat_fil_server <- function(id, data) {
         }
 
         # Date range
-        settings[["release_date"]] <- paste(
-          format(input$release_date[1], "%Y-%m-%d"),
-          format(input$release_date[2], "%Y-%m-%d"),
+        settings[["release_year"]] <- paste(
+          format(input$release_year[1], "%Y"),
+          format(input$release_year[2], "%Y"),
           sep = "|"
         )
 
-        # Exclude NA SiA scores
+        # Exclude NA SiA
         settings[["exclude_na_sia"]] <- if (isTRUE(input$exclude_na_sia)) "YES" else "YES|NO"
 
-        # Convert list to data frame
+        # Convert to data frame
         df <- data.frame(t(unlist(settings)), check.names = FALSE)
         names(df) <- names(settings)
 
-        # Order columns
-        ordered_vars <- c(
-          "sia_es_long",
-          "sia_es_short",
-          "exclude_na_sia",
-          setdiff(c(names(rename_map), "release_date"), c("sia_es_long", "sia_es_short"))
-        )
-        ordered_vars <- ordered_vars[ordered_vars %in% names(df)]
-        df <- df[ordered_vars]
-
-        # Write CSV (settings)
         write.table(df, file, sep = ",", row.names = FALSE, col.names = TRUE, quote = FALSE)
-
-        # Append citation footer
         cat(
           "\n# Citation terms.\n",
           "# Thank you for using the SiA-WD!\n",
           "# If you use the database and/or this web app, you must cite:\n",
-          "# Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information. Behav Res Methods. 2025 May 13;57(6):171. doi: 10.3758/s13428-025-02685-4. PMID: 40360861; PMCID: PMC12075381.\n",
-          "# [Your app paper citation here]\n",
+          "# Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical reliability, validity, and usability information. Behav Res Methods. 2025 May 13;57(6):171. doi: 10.3758/s13428-025-02685-4.\n",
           file = file, append = TRUE, sep = ""
         )
       },
       contentType = "text/csv"
     )
-
   })
 }
 
 
 
-# mod_feat_fil_server <- function(id, data) {
-#   moduleServer(id, function(input, output, session) {
-#     ns <- session$ns
-#
-#     # Step 1: Reactive data after sliders, checkboxes, and date
-#     filtered_for_dropdowns <- reactive({
-#       df <- data()
-#       df %>%
-#         filter(
-#           is.na(sia_es_long) | between(sia_es_long, input$sia_es_long[1], input$sia_es_long[2]),
-#           is.na(sia_es_short) | between(sia_es_short, input$sia_es_short[1], input$sia_es_short[2]),
-#           is.na(device_cost) | between(device_cost, input$device_cost[1], input$device_cost[2]),
-#           is.na(weight) | between(weight, input$weight[1], input$weight[2]),
-#           is.na(battery_life) | between(battery_life, input$battery_life[1], input$battery_life[2]),
-#           is.na(charging_duration) | between(charging_duration, input$charging_duration[1], input$charging_duration[2]),
-#           is.na(dev_storage_cap_mb) | between(dev_storage_cap_mb, input$dev_storage_cap_mb[1], input$dev_storage_cap_mb[2]),
-#           is.na(dev_storage_cap_hrs) | between(dev_storage_cap_hrs, input$dev_storage_cap_hrs[1], input$dev_storage_cap_hrs[2]),
-#           is.na(no_studies_val_rel_reviewed) | between(no_studies_val_rel_reviewed, input$no_studies_val_rel_reviewed[1], input$no_studies_val_rel_reviewed[2]),
-#           is.na(no_studies_usab_reviewed) | between(no_studies_usab_reviewed, input$no_studies_usab_reviewed[1], input$no_studies_usab_reviewed[2]),
-#           is.null(input$release_date[1]) | is.null(input$release_date[2]) |
-#             is.na(release_date) | between(release_date, input$release_date[1], input$release_date[2]),
-#           (!input$water_resistance | water_resistance == "Yes"),
-#           (!input$bio_cueing | bio_cueing == "Yes"),
-#           (!input$bio_feedback | bio_feedback == "Yes"),
-#           (!input$ppg | ppg == "Yes"),
-#           (!input$ecg | ecg == "Yes"),
-#           (!input$icg | icg == "Yes"),
-#           (!input$emg | emg == "Yes"),
-#           (!input$respiration | respiration == "Yes"),
-#           (!input$eda | eda == "Yes"),
-#           (!input$eeg | eeg == "Yes"),
-#           (!input$bp | bp == "Yes"),
-#           (!input$accelerometer | accelerometer == "Yes"),
-#           (!input$gyroscope | gyroscope == "Yes"),
-#           (!input$gps | gps == "Yes"),
-#           (!input$skin_temperature | skin_temperature == "Yes"),
-#           (!input$int_storage_met | int_storage_met == "Yes"),
-#           (!input$server_data_storage | server_data_storage == "Yes"),
-#           (!input$raw_data_available | raw_data_available == "Yes"),
-#           (!input$gdpr_comp | gdpr_comp == "Yes"),
-#           (!input$ce_app_label | ce_app_label == "Yes"),
-#           (!input$fda_app_clear | fda_app_clear == "Yes")
-#         )
-#     })
-#
-#     # Step 2: Dynamically update selectInput choices
-#     observe({
-#       df <- filtered_for_dropdowns()
-#
-#       select_inputs <- c("manufacturer", "model", "market_status", "main_use",
-#                          "wearable_type", "location", "size", "charging_method",
-#                          "other_signals", "data_trans_method", "level_validation")
-#
-#       for (input_id in select_inputs) {
-#         # Filter df based on all other selectInputs except current one
-#         df_filtered <- df
-#         for (other_id in setdiff(select_inputs, input_id)) {
-#           selected <- input[[other_id]]
-#           if (!is.null(selected)) {
-#             df_filtered <- df_filtered %>% filter(.data[[other_id]] %in% selected)
-#           }
-#         }
-#
-#         # Update current input choices based on filtered data
-#         valid_choices <- sort(unique(df_filtered[[input_id]]))
-#         selected_now <- input[[input_id]]
-#         updateSelectInput(session, input_id,
-#                           choices = valid_choices,
-#                           selected = selected_now[selected_now %in% valid_choices])
-#       }
-#     })
-#
-#
-#     # Step 3: Apply full filtering (sliders + checkboxes + dropdowns)
-#     filtered_data <- reactive({
-#       df <- filtered_for_dropdowns()  # Use already partially filtered data
-#
-#       df %>%
-#         filter(
-#           is.null(input$manufacturer) | manufacturer %in% input$manufacturer,
-#           is.null(input$model) | model %in% input$model,
-#           is.null(input$market_status) | market_status %in% input$market_status,
-#           is.null(input$main_use) | main_use %in% input$main_use,
-#           is.null(input$wearable_type) | wearable_type %in% input$wearable_type,
-#           is.null(input$location) | location %in% input$location,
-#           is.null(input$size) | size %in% input$size,
-#           is.null(input$charging_method) | charging_method %in% input$charging_method,
-#           is.null(input$other_signals) | other_signals %in% input$other_signals,
-#           is.null(input$data_trans_method) | data_trans_method %in% input$data_trans_method,
-#           is.null(input$level_validation) | level_validation %in% input$level_validation
-#         )
-#     })
-#
-#     # Observe Reset Filter button
-#     observeEvent(input$reset_filter, {
-#       # Reset sliders
-#       updateSliderInput(session, "sia_es_long", value = c(0, 10))
-#       updateSliderInput(session, "sia_es_short", value = c(0, 10))
-#       updateSliderInput(session, "device_cost", value = c(0, max(sia_df$device_cost, na.rm = TRUE)))
-#       updateSliderInput(session, "weight", value = c(0, max(sia_df$weight, na.rm = TRUE)))
-#       updateSliderInput(session, "battery_life", value = c(0, max(sia_df$battery_life, na.rm = TRUE)))
-#       updateSliderInput(session, "charging_duration", value = c(0, 10000))
-#       updateSliderInput(session, "dev_storage_cap_mb", value = c(0, max(sia_df$dev_storage_cap_mb, na.rm = TRUE)))
-#       updateSliderInput(session, "dev_storage_cap_hrs", value = c(0, max(sia_df$dev_storage_cap_hrs, na.rm = TRUE)))
-#       updateSliderInput(session, "no_studies_val_rel_reviewed", value = c(0, max(sia_df$no_studies_val_rel_reviewed, na.rm = TRUE)))
-#       updateSliderInput(session, "no_studies_usab_reviewed", value = c(0, max(sia_df$no_studies_usab_reviewed, na.rm = TRUE)))
-#
-#       # Reset date
-#       updateDateRangeInput(session, "release_date",
-#                            start = min(sia_df$release_date, na.rm = TRUE),
-#                            end = max(sia_df$release_date, na.rm = TRUE)
-#       )
-#
-#       # Reset checkboxInputs
-#       checkbox_inputs <- c("water_resistance", "bio_cueing", "bio_feedback", "ppg", "ecg", "icg",
-#                            "emg", "respiration", "eda", "eeg", "bp", "accelerometer", "gyroscope",
-#                            "gps", "skin_temperature", "raw_data_available", "int_storage_met",
-#                            "server_data_storage", "gdpr_comp", "fda_app_clear", "ce_app_label")
-#       lapply(checkbox_inputs, function(id) updateCheckboxInput(session, id, value = FALSE))
-#
-#       # Reset selectInputs
-#       select_inputs <- c("manufacturer", "model", "market_status", "main_use",
-#                          "wearable_type", "location", "size", "charging_method",
-#                          "other_signals", "data_trans_method", "level_validation")
-#       lapply(select_inputs, function(id) updateSelectInput(session, id, selected = character(0)))
-#     })
-#
-#     # Step 4: Render filtered table
-#     output$feat_filtered_table <- renderDT({
-#
-#       df <- filtered_data()
-#
-#       # Rename only the columns that exist in df
-#       existing_cols <- names(df)
-#       new_colnames <- rename_map[existing_cols]  # Get mapped names for existing cols
-#       names(df) <- ifelse(!is.na(new_colnames), new_colnames, existing_cols)  # Rename safely
-#
-#       datatable(
-#         df,
-#         options = list(
-#           pageLength = 40,
-#           autoWidth = TRUE,
-#           scrollX = TRUE,
-#           columnDefs = list(
-#             list(width = "150px", targets = "_all")
-#           )
-#         )
-#       )
-#     })
-#
-#     # Step 5: Download Handler
-#     output$download_data <- downloadHandler(
-#       filename = function() {
-#         paste0("sia_filtered_data_", Sys.Date(), ".csv")
-#       },
-#       content = function(file) {
-#         write.csv(filtered_data(), file, row.names = FALSE)
-#       }
-#     )
-#   })
-# }

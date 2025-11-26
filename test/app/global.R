@@ -21,39 +21,87 @@ invisible(lapply(required_packages, function(pkg) {
 
 # * 2 Load .Renviron -----------------------------------------------------------
 
-readRenviron(here("shiny", "test", "app", ".Renviron"))
+#readRenviron(here("test", "app", ".Renviron"))
 
 # * 3 Load functions -----------------------------------------------------------
 
-source(here("shiny", "test", "app", "functions", "func_accordion.R"))
-source(here("shiny", "test", "app", "functions", "func_cell_layout.R"))
-source(here("shiny", "test", "app", "functions", "func_colours_fresh.R"))
-source(here("shiny", "test", "app", "functions", "func_email.R"))
-source(here("shiny", "test", "app", "functions", "func_filters.R"))
-source(here("shiny", "test", "app", "functions", "func_column_defs.R"))
-source(here("shiny", "test", "app", "functions", "func_row_defs.R"))
-source(here("shiny", "test", "app", "functions", "func_mandatory_fields.R"))
-source(here("shiny", "test", "app", "functions", "func_reset_fields.R"))
+source(here("test", "app", "functions", "func_accordion.R"))
+source(here("test", "app", "functions", "func_cell_layout.R"))
+source(here("test", "app", "functions", "func_colours_fresh.R"))
+source(here("test", "app", "functions", "func_email.R"))
+source(here("test", "app", "functions", "func_filters.R"))
+source(here("test", "app", "functions", "func_column_defs.R"))
+source(here("test", "app", "functions", "func_row_defs.R"))
+source(here("test", "app", "functions", "func_mandatory_fields.R"))
+source(here("test", "app", "functions", "func_reset_fields.R"))
 
 # * 4 Load modules -----------------------------------------------------------
 
-source(here("shiny", "test", "app", "modules", "mod_controlbar.R"))
-source(here("shiny", "test", "app", "modules", "mod_header.R"))
-source(here("shiny", "test", "app", "modules", "mod_app_info.R"))
-source(here("shiny", "test", "app", "modules", "mod_prod_filter.R"))
-source(here("shiny", "test", "app", "modules", "mod_feat_filter.R"))
-source(here("shiny", "test", "app", "modules", "mod_sub_data.R"))
-source(here("shiny", "test", "app", "modules", "mod_article.R"))
-source(here("shiny", "test", "app", "modules", "mod_about.R"))
-source(here("shiny", "test", "app", "modules", "mod_contact.R"))
-source(here("shiny", "test", "app", "modules", "mod_footer.R"))
-source(here("shiny", "test", "app", "modules", "mod_timeout.R"))
+source(here("test", "app", "modules", "mod_controlbar.R"))
+source(here("test", "app", "modules", "mod_header.R"))
+source(here("test", "app", "modules", "mod_app_info.R"))
+source(here("test", "app", "modules", "mod_prod_filter.R"))
+source(here("test", "app", "modules", "mod_feat_filter.R"))
+source(here("test", "app", "modules", "mod_sub_data.R"))
+source(here("test", "app", "modules", "mod_article.R"))
+source(here("test", "app", "modules", "mod_about.R"))
+source(here("test", "app", "modules", "mod_contact.R"))
+source(here("test", "app", "modules", "mod_footer.R"))
+source(here("test", "app", "modules", "mod_timeout.R"))
 
 #  * 5 load data -----------------------------------------------
-sia_df <- get(load(here("shiny", "test", "app", "data", "df_sia_wearable_app.RData")))
+sia_df <- readRDS(here("test", "app", "data", "df_shiny_wi_subset.rds"))
+#sia_df_osf <- readRDS(here("test", "app", "data", "df_shiny_wi_osf.rds"))
 
-#remove column id
-sia_df$id <- NULL
+product_filter_cols <- c(
+  "device_id",
+  "long_term_all_score",
+  "short_term_all_score",
+  "manufacturer",
+  "model",
+  "release_year",
+  "market_status",
+  "main_use",
+  "device_cost",
+  "wearable_type",
+  "location",
+  "bio_cueing_spec_boel_value",
+  "bio_feedback_spec_boel_value",
+  "water_resistance_spec_boel_value",
+  "battery_life_spec_num_value",
+  "charging_duration_spec_num_value",
+  "accelerometer_available",
+  "bp_available",
+  "ecg_available",
+  "eda_available",
+  "eeg_available",
+  "emg_available",
+  "gps_available",
+  "gyroscope_available",
+  "icg_available",
+  "other_signals_available",
+  "ppg_available",
+  "respiration_available",
+  "skin_temperature_available",
+  "fda_clearance_spec_boel_value",
+  "gdpr_compliance_spec_boel_value",
+  "ce_marking_spec_boel_value",
+  "int_storage_met_spec_boel_value",
+  "raw_data_available_spec_boel_value",
+  "server_data_storage_spec_boel_value",
+  "dev_storage_cap_hr_spec_num_value",
+  "dev_storage_cap_mb_spec_num_value",
+  "usability_n_of_studies",
+  "validity_and_reliability_n_of_studies",
+  "usability_evidence_level",
+  "validity_and_reliability_evidence_level"
+)
+
+# this is what you’ll use for the product filter
+sia_df <- select(sia_df, all_of(product_filter_cols))
+
+
+sia_df$device_id <- NULL
 
 #  * 6 calculate no of wearables for home page -----------------------------------------------
 n_wearables <- nrow(sia_df)
@@ -73,23 +121,25 @@ pal_num_scale <- generate_alpha_palette("#1c75bc", 100)
 
 #  * * 8.2 cells -----------------------------------------------
 
-#bars columns
-bar_vars <- c("sia_es_long", "sia_es_short")
+#sia scores
+bar_vars <- c("long_term_all_score", "short_term_all_score")
 
 # numerical columns
 numeric_vars <- names(sia_df)[sapply(sia_df, is.numeric) & !names(sia_df) %in% bar_vars]
 
 # save min and max per column
-numeric_var_ranges <- lapply(numeric_vars, function(var) {
+numeric_var_ranges <- suppressWarnings(lapply(numeric_vars, function(var) {
   range(sia_df[[var]], na.rm = TRUE)
 })
+)
 names(numeric_var_ranges) <- numeric_vars
 
-# yes/no columns
-yn_vars <- names(sia_df)[sapply(sia_df, is.character) & names(sia_df) != "release_date" & sapply(sia_df, function(x) any(x %in% c("Yes", "No"), na.rm = TRUE))]
+#yes no vars
+yn_vars <- names(sia_df)[sapply(sia_df, is.character) &
+                           sapply(sia_df, function(x) any(x %in% c("yes", "no"), na.rm = TRUE))]
 
-#char columns to rename
-char_vars <- setdiff(names(sia_df), c(names(bar_vars), names(yn_vars), names(numeric_vars), "id"))
+#char vars
+char_vars <- setdiff(names(sia_df), c(bar_vars, yn_vars, numeric_vars, "device_id"))
 
 #  * 9 Mandatory fields ---------------------------
 
@@ -117,51 +167,48 @@ fieldsMandatory_email <- c("name", "email", "message")
 # * * 10.1 Filters ---------------------------
 
 rename_map <- c(
-  "sia_es_long" = "Long-Term SiA Score",
-  "sia_es_short" = "Short-Term SiA Score",
+  "long_term_all_score" = "Long-Term SiA Score",
+  "short_term_all_score" = "Short-Term SiA Score",
   "manufacturer" = "Manufacturer",
   "model" = "Model",
-  "website" = "Website",
-  "release_date" = "Release Date",
+  "release_year" = "Release Year",
   "market_status" = "Market Status",
   "main_use" = "Main Use",
   "device_cost" = "Cost (€)",
   "wearable_type" = "Type",
   "location" = "Location",
-  "weight" = "Weight (g)",
-  "size" = "Size",
-  "water_resistance" = "Water Resistant",
-  "battery_life" = "Battery Life (min)",
-  "charging_method" = "Charging Method",
-  "charging_duration" = "Charging Duration (min)",
-  "bio_cueing" = "Bio Cueing",
-  "bio_feedback" = "Bio Feedback",
-  "ppg" = "PPG",
-  "ecg" = "ECG",
-  "icg" = "ICG",
-  "emg" = "EMG",
-  "respiration" = "Respiration",
-  "eda" = "EDA",
-  "eeg" = "EEG",
-  "bp" = "Blood Pressure",
-  "accelerometer" = "Accelerometer",
-  "gyroscope" = "Gyroscope",
-  "gps" = "GPS",
-  "skin_temperature" = "Skin Temperature",
-  "other_signals" = "Other Signals",
-  "raw_data_available" = "Raw Data Available",
-  "data_trans_method" = "Data Transmission Method",
-  "int_storage_met" = "Internal Storage",
-  "server_data_storage" = "Server Data Storage",
-  "dev_storage_cap_hrs" = "Device Storage (hrs)",
-  "dev_storage_cap_mb" = "Device Storage (MB)",
-  "gdpr_comp" = "GDPR Compliant",
-  "fda_app_clear" = "FDA Approved",
-  "ce_app_label" = "CE Label",
-  "level_validation" = "Validation Level",
-  "no_studies_val_rel_reviewed" = "Validation Studies Reviewed",
-  "no_studies_usab_reviewed" = "Usability Studies Reviewed"
+  "bio_cueing_spec_boel_value" = "Bio Cueing",
+  "bio_feedback_spec_boel_value" = "Bio Feedback",
+  "water_resistance_spec_boel_value" = "Water Resistance",
+  "battery_life_spec_num_value" = "Battery Life (h)",
+  "charging_duration_spec_num_value" = "Charging Duration (min)",
+  "accelerometer_available" = "Accelerometer",
+  "bp_available" = "Blood Pressure",
+  "ecg_available" = "ECG",
+  "eda_available" = "EDA",
+  "eeg_available" = "EEG",
+  "emg_available" = "EMG",
+  "gps_available" = "GPS",
+  "gyroscope_available" = "Gyroscope",
+  "icg_available" = "ICG",
+  "other_signals_available" = "Other Signals",
+  "ppg_available" = "PPG",
+  "respiration_available" = "Respiration",
+  "skin_temperature_available" = "Skin Temperature",
+  "fda_clearance_spec_boel_value" = "FDA Clearance",
+  "gdpr_compliance_spec_boel_value" = "GDPR Compliance",
+  "ce_marking_spec_boel_value" = "CE Marking",
+  "int_storage_met_spec_boel_value" = "Internal Storage",
+  "raw_data_available_spec_boel_value" = "Raw Data Available",
+  "server_data_storage_spec_boel_value" = "Server Data Storage",
+  "dev_storage_cap_hr_spec_num_value" = "Storage (hrs)",
+  "dev_storage_cap_mb_spec_num_value" = "Storage (MB)",
+  "usability_n_of_studies" = "Usability Studies (n)",
+  "validity_and_reliability_n_of_studies" = "Validity & Reliability Studies (n)",
+  "usability_evidence_level" = "Usability Evidence Level",
+  "validity_and_reliability_evidence_level" = "Validity & Reliability Evidence Level"
 )
+
 
 # * * 10.1 Submit data ---------------------------
 

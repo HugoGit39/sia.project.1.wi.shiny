@@ -136,8 +136,8 @@ mod_prod_fil_server <- function(id, sia_df) {
       df <- selected_products()
 
       # format release year if present
-      if ("release_date" %in% names(df)) {
-        df$release_date <- format(df$release_date, "%Y")
+      if ("release_year" %in% names(df)) {
+        df$release_year <- format(df$release_year, "%Y")
       }
 
       # 2) transpose to features-as-rows, models-as-columns
