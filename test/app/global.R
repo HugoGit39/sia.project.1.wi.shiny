@@ -156,7 +156,7 @@ csv_only_ids <- union(setdiff(char_vars, char_no_digit_ids), "additional_informa
 
 char_no_digit_mand <- intersect(char_no_digit_ids, fieldsMandatory_data)
 
-csv_delims_pattern <- "[,;]"
+csv_delims_pattern <- "[,]"
 
 # * * 9.2 email
 fieldsMandatory_email <- c("name", "email", "message")
