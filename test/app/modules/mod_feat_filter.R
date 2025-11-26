@@ -253,9 +253,9 @@ mod_feat_fil_server <- function(id, data) {
     ns <- session$ns
 
     # --- 1. Variable groups (reuse from global.R) ----
-    range_vars   <- c(bar_vars, numeric_vars)
+    range_vars   <- setdiff(c(bar_vars, numeric_vars), "weight_gr")
     checkbox_vars <- yn_vars
-    select_inputs <- setdiff(intersect(names(sia_df), char_vars), "release_year")
+    select_inputs <- setdiff(intersect(names(sia_df), char_vars), c("release_year", "size_mm"))
 
     # --- 2. Filter for dropdowns ----
     filtered_for_dropdowns <- reactive({
