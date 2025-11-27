@@ -1,4 +1,4 @@
-/* 3. App info*/
+/* 1. App info*/
 
 /* This function sets up the citation copy button. */
 
@@ -14,10 +14,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+/* 2. Filters*/
+
+/* 3. Data*/
+
 // Data submited
 Shiny.addCustomMessageHandler("dataSubmitted", function(message) {
   alert(message);
 });
+
+/* 4. Research*/
+
+/* 5. About*/
+
+/* 6. Contact*/
 
 // Email submited
 Shiny.addCustomMessageHandler("emailSubmitted", function(message) {
