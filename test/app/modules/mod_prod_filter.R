@@ -85,7 +85,12 @@ mod_prod_fil_ui <- function(id) {
   )
 }
 
+#############################################################################################
+#
 # Function to create the Server logic
+#
+#############################################################################################
+
 mod_prod_fil_server <- function(id, df_sia_shiny_filters) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
