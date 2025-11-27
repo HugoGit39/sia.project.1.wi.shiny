@@ -50,62 +50,12 @@ source(here("test", "app", "modules", "mod_footer.R"))
 source(here("test", "app", "modules", "mod_timeout.R"))
 
 #  * 5 load data -----------------------------------------------
-sia_df <- readRDS(here("test", "app", "data", "df_shiny_wi_subset.rds"))
-#sia_df_osf <- readRDS(here("test", "app", "data", "df_shiny_wi_osf.rds"))
-
-product_filter_cols <- c(
-  "long_term_all_score",
-  "short_term_all_score",
-  "manufacturer",
-  "model",
-  "release_year",
-  "market_status",
-  "main_use",
-  "device_cost",
-  "wearable_type",
-  "location",
-  "size_mm",
-  "weight_gr",
-  "bio_cueing_spec_boel_value",
-  "bio_feedback_spec_boel_value",
-  "water_resistance_spec_boel_value",
-  "battery_life_spec_num_value",
-  "charging_duration_spec_num_value",
-  "accelerometer_available",
-  "bp_available",
-  "ecg_available",
-  "eda_available",
-  "eeg_available",
-  "emg_available",
-  "gps_available",
-  "gyroscope_available",
-  "icg_available",
-  "other_signals_available",
-  "ppg_available",
-  "respiration_available",
-  "skin_temperature_available",
-  "fda_clearance_spec_boel_value",
-  "gdpr_compliance_spec_boel_value",
-  "ce_marking_spec_boel_value",
-  "int_storage_met_spec_boel_value",
-  "raw_data_available_spec_boel_value",
-  "server_data_storage_spec_boel_value",
-  "dev_storage_cap_hr_spec_num_value",
-  "dev_storage_cap_mb_spec_num_value",
-  "usability_n_of_studies",
-  "validity_and_reliability_n_of_studies",
-  "usability_evidence_level",
-  "validity_and_reliability_evidence_level"
-)
-
-# this is what you’ll use for the product filter
-sia_df <- select(sia_df, all_of(product_filter_cols))
-
-
-sia_df$device_id <- NULL
+df_sia_shiny_filters <- readRDS(here("test", "app", "data", "df_shiny_sia_wd_filter.rds"))
+df_sia_shiny_info <- readRDS(here("test", "app", "data", "df_shiny_sia_wd_info.rds"))
+df_sia_osf <- readRDS(here("test", "app", "data", "df_osf_sia_wd_shiny.rds"))
 
 #  * 6 calculate no of wearables for home page -----------------------------------------------
-n_wearables <- nrow(sia_df)
+n_wearables <- nrow(df_sia_shiny_filters)
 
 #  * 7 set spinner table -----------------------------------------------
 options(spinner.type = 5, spinner.color = "#f15a29", spinner.size = 0.5, hide.ui = FALSE)
@@ -122,25 +72,34 @@ pal_num_scale <- generate_alpha_palette("#1c75bc", 100)
 
 #  * * 8.2 cells -----------------------------------------------
 
-#sia scores
+# 1. Define SiA score bars
 bar_vars <- c("long_term_all_score", "short_term_all_score")
 
-# numerical columns
-numeric_vars <- names(sia_df)[sapply(sia_df, is.numeric) & !names(sia_df) %in% bar_vars]
+# 2. Numerical columns (exclude bar vars + device_id)
+numeric_vars <- names(df_sia_shiny_filters)[
+  sapply(df_sia_shiny_filters, is.numeric) &
+    !names(df_sia_shiny_filters) %in% c(bar_vars, "device_id")
+]
 
-# save min and max per column
-numeric_var_ranges <- suppressWarnings(lapply(numeric_vars, function(var) {
-  range(sia_df[[var]], na.rm = TRUE)
-})
+# 3. Compute min/max ranges for each numeric var
+numeric_var_ranges <- suppressWarnings(
+  lapply(numeric_vars, function(var) {
+    range(df_sia_shiny_filters[[var]], na.rm = TRUE)
+  })
 )
 names(numeric_var_ranges) <- numeric_vars
 
-#yes no vars
-yn_vars <- names(sia_df)[sapply(sia_df, is.character) &
-                           sapply(sia_df, function(x) any(x %in% c("yes", "no"), na.rm = TRUE))]
+# 4. Yes/No columns (lowercase "yes"/"no")
+yn_vars <- names(df_sia_shiny_filters)[
+  sapply(df_sia_shiny_filters, is.character) &
+    sapply(df_sia_shiny_filters, function(x) any(x %in% c("yes", "no"), na.rm = TRUE))
+]
 
-#char vars
-char_vars <- setdiff(names(sia_df), c(bar_vars, yn_vars, numeric_vars, "device_id"))
+# 5. Character (categorical) columns
+char_vars <- setdiff(
+  names(df_sia_shiny_filters),
+  c(bar_vars, yn_vars, numeric_vars, "device_id")
+)
 
 #  * 9 Mandatory fields ---------------------------
 
@@ -172,6 +131,7 @@ rename_map <- c(
   "short_term_all_score" = "Short-Term SiA Score",
   "manufacturer" = "Manufacturer",
   "model" = "Model",
+  "website" = "Website",
   "release_year" = "Release Year",
   "market_status" = "Market Status",
   "main_use" = "Main Use",

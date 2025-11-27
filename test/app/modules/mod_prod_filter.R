@@ -19,13 +19,13 @@ mod_prod_fil_ui <- function(id) {
           collapsible = FALSE,
           solidHeader = TRUE,
           selectInput(ns("product1"), "Product 1: Manufacturer",
-                      choices = sort(unique(sia_df$manufacturer)),
+                      choices = sort(unique(df_sia_shiny_filters$manufacturer)),
                       selected = "Apple", multiple = FALSE),
           selectInput(ns("model1"), "Product 1: Model",
                       choices = NULL, selected = NULL, multiple = FALSE),
 
           selectInput(ns("product2"), "Product 2: Manufacturer",
-                      choices = sort(unique(sia_df$manufacturer)),
+                      choices = sort(unique(df_sia_shiny_filters$manufacturer)),
                       selected = "Vrije Universiteit van Amsterdam", multiple = FALSE),
           selectInput(ns("model2"), "Product 2: Model",
                       choices = NULL, selected = NULL, multiple = FALSE),
@@ -45,7 +45,7 @@ mod_prod_fil_ui <- function(id) {
             )
           ),
           selectInput(ns("product3"), "Product 3: Manufacturer",
-                      choices = c("Choose a product" = "", sort(unique(sia_df$manufacturer))),
+                      choices = c("Choose a product" = "", sort(unique(df_sia_shiny_filters$manufacturer))),
                       selected = "", multiple = FALSE),
           selectInput(ns("model3"), "Product 3: Model",
                       choices = NULL, selected = NULL, multiple = FALSE)
@@ -86,24 +86,24 @@ mod_prod_fil_ui <- function(id) {
 }
 
 # Function to create the Server logic
-mod_prod_fil_server <- function(id, sia_df) {
+mod_prod_fil_server <- function(id, df_sia_shiny_filters) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     disable("model3")
 
     observeEvent(input$product1, {
-      df <- sia_df()
+      df <- df_sia_shiny_filters()
       updateSelectInput(session, "model1", choices = sort(unique(df$model[df$manufacturer == input$product1])))
     })
 
     observeEvent(input$product2, {
-      df <- sia_df()
+      df <- df_sia_shiny_filters()
       updateSelectInput(session, "model2", choices = sort(unique(df$model[df$manufacturer == input$product2])))
     })
 
     observeEvent(input$product3, {
-      df <- sia_df()
+      df <- df_sia_shiny_filters()
       if (input$product3 == "None" || input$product3 == "") {
         disable("model3")
         updateSelectInput(session, "model3", choices = character(0), selected = "")
@@ -114,7 +114,7 @@ mod_prod_fil_server <- function(id, sia_df) {
     })
 
     selected_products <- reactive({
-      df <- sia_df()
+      df <- df_sia_shiny_filters()
 
       rows <- list(
         df %>% filter(manufacturer == input$product1, model == input$model1),
@@ -142,7 +142,7 @@ mod_prod_fil_server <- function(id, sia_df) {
 
       # 2) transpose to features-as-rows, models-as-columns
       df_t <- df %>%
-        select(-manufacturer, -model) %>%
+        select(-manufacturer, -model, -device_id) %>%
         t() %>%
         as.data.frame(stringsAsFactors = FALSE)
 
@@ -163,30 +163,38 @@ mod_prod_fil_server <- function(id, sia_df) {
 
       # 3) per-column cell renderer (bars -> yes/no -> numeric heat -> plain)
       for (col in transposed_cols) {
-        col_defs[[col]] <- colDef(cell = function(value, index) {
-          # bars
-          rendered <- func_bar_row_defs(value, index, df_t$Feature, bar_vars, rename_map)
-          if (!identical(rendered, value)) return(rendered)
+        col_defs[[col]] <- colDef(
+          cell = function(value, index) {
 
-          # yes/no
-          rendered <- func_yn_row_defs(value, index, df_t$Feature, yn_vars, rename_map)
-          if (!identical(rendered, value)) return(rendered)
+            # --- special case: website row => clickable link ---
+            if (df_t$Feature_internal[index] == "website" &&
+                !is.na(value) && nzchar(value)) {
+              return(htmltools::tags$a(href = value, target = "_blank", "Visit website"))
+            }
 
-          # numeric (row-aware; uses Feature_internal + global pal_num_scale)
-          rendered <- func_numeric_row_defs(
-            value, index,
-            feature_internal    = df_t$Feature_internal,
-            numeric_vars        = numeric_vars,
-            numeric_var_ranges  = numeric_var_ranges,
-            palette             = pal_num_scale
-          )
-          if (!identical(rendered, value)) return(rendered)
+            # bars
+            rendered <- func_bar_row_defs(value, index, df_t$Feature, bar_vars, rename_map)
+            if (!identical(rendered, value)) return(rendered)
 
-          # fallback
-          value
-        })
+            # yes/no
+            rendered <- func_yn_row_defs(value, index, df_t$Feature, yn_vars, rename_map)
+            if (!identical(rendered, value)) return(rendered)
+
+            # numeric heat
+            rendered <- func_numeric_row_defs(
+              value, index,
+              feature_internal    = df_t$Feature_internal,
+              numeric_vars        = numeric_vars,
+              numeric_var_ranges  = numeric_var_ranges,
+              palette             = pal_num_scale
+            )
+            if (!identical(rendered, value)) return(rendered)
+
+            # fallback: plain text
+            value
+          }
+        )
       }
-
 
       # 4) render table
       reactable(
