@@ -37,7 +37,7 @@ $(document).ready(function () {
         <div id='glossary-popover-prod'
              style='max-height:240px; overflow-y:auto; overflow-x:hidden;
                     text-align:left; font-size:13px; line-height:1.3; width:420px; padding-right:6px;'>
-          <b>Table Information"</b><br><br>
+          <b>Table Information</b><br><br>
 
           <b>SiA Scores</b><br>
           • Long-Term SiA Score — Weighted technical, usability, and reliability score for extended use (>2 week).<br>
