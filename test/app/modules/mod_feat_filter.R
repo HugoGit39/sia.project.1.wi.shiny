@@ -244,10 +244,7 @@ mod_feat_fil_ui <- function(id) {
                 style   = "border-width: 2px;"
               ),
               downloadButton(
-                outputId = ns("download_data"),
-                label    = "Download Filtered Results",
-                class    = "btn btn-outline-secondary btn-sm",
-                style    = "border-width: 2px;"
+                outputId = ns("download_data"), "Download Filtered Results",
               )
             ),
             reactableOutput(ns("feat_filtered_table")) %>% withSpinner(),

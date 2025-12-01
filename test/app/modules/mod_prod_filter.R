@@ -91,7 +91,7 @@ mod_prod_fil_ui <- function(id) {
               class   = "glossary-info-btn",   # <--- ADD THIS BACK
               style   = "border-width: 2px;"
             ),
-            downloadButton(ns("download_data"), "Download Filtered Products")
+            downloadButton(ns("download_data"), "Download Filtered Results")
           ),
 
           # --- Table Output ----
