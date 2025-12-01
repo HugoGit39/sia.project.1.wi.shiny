@@ -1,9 +1,11 @@
 ############################################################################################
 #
-#  Function nodule for feauture filter (extensive)
+#  Module for feature filter (extensive)
 #
+# Stress in Action 2025
 #############################################################################################
 
+# Feature Filter Module (UI)
 mod_feat_fil_ui <- function(id) {
   ns <- NS(id)
 
@@ -257,12 +259,7 @@ mod_feat_fil_ui <- function(id) {
   )
 }
 
-############################################################################################
-#
-#  Module for feature filter (extensive)
-#
-#############################################################################################
-
+# Feature Filter Module (Server)
 mod_feat_fil_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

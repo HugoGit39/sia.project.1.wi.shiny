@@ -2,6 +2,7 @@
 #
 #  Function Feature (extensive) filter
 #
+# Stress in Action 2025
 #############################################################################################
 
 # Range filter helper

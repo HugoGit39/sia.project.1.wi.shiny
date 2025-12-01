@@ -2,6 +2,7 @@
 #
 #  Function for SiA colours
 #
+# Stress in Action 2025
 #############################################################################################
 
 colours_fresh <- function() {

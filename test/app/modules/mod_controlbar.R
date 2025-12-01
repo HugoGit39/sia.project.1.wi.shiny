@@ -1,10 +1,11 @@
 ############################################################################################
 #
-#  Function nodule  for controlbar
+#  Module  for controlbar
 #
+# Stress in Action 2025
 #############################################################################################
 
-# ui
+# Controlbar Module (UI)
 mod_control_ui <- function(id) {
   ns <- NS(id)
 
@@ -56,7 +57,7 @@ mod_control_ui <- function(id) {
     )
 }
 
-#server
+# Controlbar Module (Server)
 mod_control__server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 

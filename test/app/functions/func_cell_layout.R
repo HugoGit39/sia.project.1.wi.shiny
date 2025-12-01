@@ -2,6 +2,7 @@
 #
 #  Function for reactable layout
 #
+# Stress in Action 2025
 #############################################################################################
 
 # generate 100-step palette from a hex color with varying alpha

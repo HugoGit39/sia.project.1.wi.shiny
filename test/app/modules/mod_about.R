@@ -1,10 +1,11 @@
 ############################################################################################
 #
-#  Function nodule for about
+#  Module for about
 #
+# Stress in Action 2025
 #############################################################################################
 
-# App Info Module (UI)
+# About Module (UI)
 mod_about_ui <- function(id) {
   ns <- NS(id)
 
@@ -235,7 +236,7 @@ mod_about_ui <- function(id) {
   )
 }
 
-# App Info Module (Server)
+# About Module (Server)
 mod_about_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     # No server-side logic needed for static content

@@ -1,10 +1,11 @@
 ############################################################################################
 #
-#  Function nodule for nfeauture filter (extensive)
+#  Module for time out
 #
+# Stress in Action 2025
 #############################################################################################
 
-#' Module UI for Time-out
+# Time Out Module (UI)
 mod_timeout_ui <- function(id) {
   ns <- NS(id)
 
@@ -13,7 +14,7 @@ mod_timeout_ui <- function(id) {
   )
 }
 
-# Module server for Time-out M
+# Time Out Module (Server)
 mod_timeout_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 

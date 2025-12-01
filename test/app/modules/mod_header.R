@@ -1,10 +1,11 @@
 ############################################################################################
 #
-#  Function module for navbar
+#  Module for navbar
 #
+# Stress in Action 2025
 #############################################################################################
 
-# Navbar UI Module
+# Header Module (UI)
 mod_header_ui <- function(id) {
   ns <- NS(id)
 
@@ -38,7 +39,7 @@ mod_header_ui <- function(id) {
   )
 }
 
-# Navbar Server Module
+# Header Module (Server)
 mod_header_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 

@@ -1,10 +1,11 @@
 ############################################################################################
 #
-#  Function nodule  for Article
+#  Module for Article
 #
+# Stress in Action 2025
 #############################################################################################
 
-# ui
+# Article Module (UI)
 mod_article_ui <- function(id) {
   ns <- NS(id)
 
@@ -163,6 +164,7 @@ mod_article_ui <- function(id) {
   )
 }
 
+# Article Module (Server)
 mod_article_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     output$download_pdf <- downloadHandler(

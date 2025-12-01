@@ -1,10 +1,10 @@
 ############################################################################################
 #
-#  Function for contact us
+#  Module for contact us
 #
 #############################################################################################
 
-# Contact UI
+# Contact Module (UI)
 mod_contact_ui <- function(id) {
 
   ns <- NS(id)
@@ -40,7 +40,7 @@ mod_contact_ui <- function(id) {
   )
 }
 
-# Contact Server
+# Contact Module (Server)
 mod_contact_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

@@ -1,9 +1,11 @@
 ############################################################################################
 #
-#  Function module for product filter (CLEAN VERSION)
+#  Module for product filter
 #
+# Stress in Action 2025
 ############################################################################################
 
+# Product Filter Module (UI)
 mod_prod_fil_ui <- function(id) {
   ns <- NS(id)
 
@@ -107,12 +109,7 @@ mod_prod_fil_ui <- function(id) {
   )
 }
 
-#############################################################################################
-#
-#  Function module for product filter SERVER
-#
-#############################################################################################
-
+# Product Filter Module (Server)
 mod_prod_fil_server <- function(id, df_sia_shiny_filters) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

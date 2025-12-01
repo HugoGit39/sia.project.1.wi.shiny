@@ -2,6 +2,7 @@
 #
 #  Function for accordion
 #
+# Stress in Action 2025
 #############################################################################################
 
 accordionI <- function(tit, stat, col, text){
