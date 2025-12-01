@@ -6,7 +6,7 @@
 #############################################################################################
 
 # Function to send email
-send_email <- function(body, subject, receiver = "disc@stress-in-action.nl", attachment = NULL) {
+send_email <- function(body, subject, attachment = NULL) {
 
   # SMTP settings (use environment variables for security)
   smtp <- server(
@@ -18,8 +18,8 @@ send_email <- function(body, subject, receiver = "disc@stress-in-action.nl", att
 
   # Create email message
   msg <- envelope(
-    to = "disc@stress-in-action.nl",
-    from = "disc@stress-in-action.nl"
+    to = Sys.getenv("MAIL_NAME_ID"),
+    from = Sys.getenv("MAIL_NAME_ID")
   ) %>%
     subject(subject) %>%
     text(body)

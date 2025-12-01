@@ -192,7 +192,7 @@ mod_sub_data_ui <- function(id) {
           p("When you approve your draft, the option to send it to us will become available.",
             style = "text-align: justify;"),
           p(actionButton(ns("submit_final"), "Submit", disabled = TRUE)),
-          downloadLink(ns("dl_csv_submit"), "", style = "display:none;"),
+          downloadLink(ns("dl_xlsx_submit"), "", style = "display:none;"),
           p("A copy will be downloaded automatically when submitting. We will reach out to you to discuss it in more detail.",
             style = "text-align: justify;")
         ),
@@ -250,15 +250,15 @@ mod_sub_data__server <- function(id) {
 
     # --- download + submit logic (now Excel only) ---
     last_submission <- reactiveVal(NULL)
-    output$dl_csv_submit <- downloadHandler(
+    output$dl_xlsx_submit <- downloadHandler(
       filename = function() sprintf("sia_submission_from_%s.xlsx", input$email),
       content = function(file) {
         df <- req(last_submission())
-        writexl::write_xlsx(list("Submission" = df), path = file)
+        write_xlsx(list("Submission" = df), path = file)
       },
       contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    outputOptions(output, "dl_csv_submit", suspendWhenHidden = FALSE)
+    outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
 
     observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
 
@@ -274,7 +274,7 @@ mod_sub_data__server <- function(id) {
       df$DisplayName <- ifelse(df$Variable %in% names(rename_map), rename_map[df$Variable], df$Variable)
 
       # capitalize core user fields for display
-      df$DisplayName <- dplyr::recode(
+      df$DisplayName <- recode(
         df$DisplayName,
         "name" = "Name",
         "email" = "Email",
@@ -317,11 +317,11 @@ mod_sub_data__server <- function(id) {
       excel_path <- file.path(tempdir(), paste0(
         "sia_data_submission_", input$email, "_", format(Sys.time(), "%Y%m%d-%H%M%S"), ".xlsx"
       ))
-      writexl::write_xlsx(list("Submission" = df), path = excel_path)
+      write_xlsx(list("Submission" = df), path = excel_path)
       stopifnot(file.exists(excel_path))
 
       session$onFlushed(function() {
-        shinyjs::runjs(sprintf("document.getElementById('%s').click();", ns("dl_csv_submit")))
+        runjs(sprintf("document.getElementById('%s').click();", ns("dl_xlsx_submit")))
       }, once = TRUE)
 
       session$sendCustomMessage("dataSubmitted", "Thank you for your data submission! We will get back to you soon.")

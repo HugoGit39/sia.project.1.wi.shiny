@@ -22,7 +22,7 @@ invisible(lapply(required_packages, function(pkg) {
 
 # * 2 Load .Renviron -----------------------------------------------------------
 
-#readRenviron(here("test", "app", ".Renviron"))
+readRenviron(here("test", "app", ".Renviron"))
 
 # * 3 Load functions -----------------------------------------------------------
 

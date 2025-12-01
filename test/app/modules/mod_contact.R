@@ -71,7 +71,7 @@ mod_contact_server <- function(id) {
                     "\n\nInstitution: ", input$institution,
                     "\nMessage: ", input$message)
 
-      subject <- "Wearable Shiny App message"
+      subject <- "Wearable Database App message"
 
       send_email(body, subject)
 
