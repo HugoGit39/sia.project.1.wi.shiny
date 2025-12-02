@@ -233,22 +233,6 @@ mod_sub_data__server <- function(id) {
 
     last_submission <- reactiveVal(NULL)
 
-    # --- reactive builder for the form ---
-    build_form <- reactive({
-      data.frame(
-        Variable = rename_subm,
-        Value = vapply(rename_subm, function(varname) {
-          val <- input[[varname]]
-          if (varname %in% yn_vars) return(if (isTRUE(val)) "Yes" else "No")
-          if (inherits(val, "Date")) return(if (!is.null(val) && !is.na(val)) format(val, "%Y-%m-%d") else NA_character_)
-          if (is.null(val) || (is.character(val) && val == "")) return(NA_character_)
-          as.character(val)
-        }, character(1)),
-        check.names = FALSE,
-        stringsAsFactors = FALSE
-      )
-    })
-
     # --- validation and inline errors (email only) ---
     output$email_error <- renderUI({
       v <- input$email
@@ -265,21 +249,21 @@ mod_sub_data__server <- function(id) {
         updateSwitchInput(session, "draft_ok", value = FALSE)
     })
 
-    # --- download + submit logic (now Excel only) ---
-    output$dl_xlsx_submit <- downloadHandler(
-      filename = function() {
-        paste0("sia_data_submission", ".xlsx")
-      },
-      content = function(file) {
-        df <- req(last_submission())
-        write_xlsx(list("Submission" = df), path = file)
-      },
-      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
-    outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
-
-    observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
+    # --- reactive builder for the form ---
+    build_form <- reactive({
+      data.frame(
+        Variable = rename_subm,
+        Value = vapply(rename_subm, function(varname) {
+          val <- input[[varname]]
+          if (varname %in% yn_vars) return(if (isTRUE(val)) "Yes" else "No")
+          if (inherits(val, "Date")) return(if (!is.null(val) && !is.na(val)) format(val, "%Y-%m-%d") else NA_character_)
+          if (is.null(val) || (is.character(val) && val == "")) return(NA_character_)
+          as.character(val)
+        }, character(1)),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+    })
 
     # --- table preview ---
     output$draft_table <- renderReactable({
@@ -359,5 +343,22 @@ mod_sub_data__server <- function(id) {
 
       send_email(body = body, subject = subject, attachment = excel_path)
     })
+
+    # --- download + submit logic (now Excel only) ---
+    output$dl_xlsx_submit <- downloadHandler(
+      filename = function() {
+        paste0("sia_data_submission", ".xlsx")
+      },
+      content = function(file) {
+        df <- req(last_submission())
+        write_xlsx(list("Submission" = df), path = file)
+      },
+      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
+
+    observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
+
   })
 }
