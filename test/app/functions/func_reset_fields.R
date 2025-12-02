@@ -1,8 +1,9 @@
 ############################################################################################
 #
-#  Function reset fields
+# Function reset fields
 #
 # Stress in Action 2025
+#
 #############################################################################################
 
 # Generic reset that uses rename_subm + each input's value type

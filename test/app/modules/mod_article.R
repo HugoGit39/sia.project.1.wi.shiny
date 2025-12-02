@@ -1,8 +1,9 @@
 ############################################################################################
 #
-#  Module for Article
+# Module for Article
 #
 # Stress in Action 2025
+#
 #############################################################################################
 
 # Article Module (UI)
@@ -139,7 +140,7 @@ mod_article_ui <- function(id) {
           status = "primary",
           div(
             style = "text-align: center; margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem;",
-            downloadButton(ns("download_pdf"), "Download PDF", class = "btn-primary"),
+            downloadButton(ns("download_pdf"), "Download PDF"),
             a(
               href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
               target = "_blank",

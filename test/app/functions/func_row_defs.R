@@ -1,8 +1,9 @@
 ############################################################################################
 #
-#  Functions for row layout reactable
+# Functions for row layout reactable
 #
 # Stress in Action 2025
+#
 #############################################################################################
 
 func_bar_row_defs <- function(value, index, feature_vec, bar_vars, rename_map) {

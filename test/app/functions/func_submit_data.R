@@ -1,8 +1,9 @@
 ############################################################################################
 #
-#  Function for submit data
+# Function for submit data
 #
 # Stress in Action 2025
+#
 #############################################################################################
 
 text_or_selectize <- function(inputId, label, df, col) {
