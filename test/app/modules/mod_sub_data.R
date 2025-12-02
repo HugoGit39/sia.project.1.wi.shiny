@@ -60,7 +60,7 @@ mod_sub_data_ui <- function(id) {
               text_or_selectize(ns("manufacturer"), labelMandatory("Manufacturer"), df_sia_shiny_filters, "manufacturer"),
               uiOutput(ns("manufacturer_csv_error")),
               textInput(ns("model"), labelMandatory("Model"), placeholder = "Click and type model name"),
-              textInput(ns("website"), labelMandatory("Website"), placeholder = "Click and paste or type URL https://"),
+              textInput(ns("website"), "Website", placeholder = "Click and paste or type URL https://"),
               dateInput(ns("release_year"), "Release Year"),
               text_or_selectize(ns("market_status"), labelMandatory("Market Status"), df_sia_shiny_filters, "market_status"),
               text_or_selectize(ns("main_use"), labelMandatory("Main Use"), df_sia_shiny_filters, "main_use"),
@@ -231,6 +231,8 @@ mod_sub_data__server <- function(id) {
     disable("draft_ok")
     updateSwitchInput(session, "draft_ok", value = FALSE)
 
+    last_submission <- reactiveVal(NULL)
+
     # --- reactive builder for the form ---
     build_form <- reactive({
       data.frame(
@@ -264,15 +266,17 @@ mod_sub_data__server <- function(id) {
     })
 
     # --- download + submit logic (now Excel only) ---
-    last_submission <- reactiveVal(NULL)
     output$dl_xlsx_submit <- downloadHandler(
-      filename = function() sprintf("sia_submission_from_%s.xlsx", input$email),
+      filename = function() {
+        paste0("sia_data_submission", ".xlsx")
+      },
       content = function(file) {
         df <- req(last_submission())
         write_xlsx(list("Submission" = df), path = file)
       },
       contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
     outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
 
     observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
@@ -329,8 +333,11 @@ mod_sub_data__server <- function(id) {
       df <- build_form()
       last_submission(df)
 
-      excel_path <- file.path(tempdir(), paste0(
-        "sia_data_submission_", input$email, "_", format(Sys.time(), "%Y%m%d-%H%M%S"), ".xlsx"
+      excel_path <- file.path(tempdir(),   paste0(
+        "sia_data_submission_",
+        input$email, "_",
+        format(Sys.Date(), "%Y%m%d"),
+        ".xlsx"
       ))
       write_xlsx(list("Submission" = df), path = excel_path)
       stopifnot(file.exists(excel_path))
