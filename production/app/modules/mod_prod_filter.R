@@ -1,15 +1,18 @@
 ############################################################################################
 #
-#  Function module for product filter
+# Module for product filter
 #
-#############################################################################################
+# Stress in Action 2025
+#
+############################################################################################
 
-# Function to create the UI
+# Product Filter Module (UI)
 mod_prod_fil_ui <- function(id) {
   ns <- NS(id)
 
   tagList(
     fluidRow(
+      # ---------------- LEFT FILTER PANEL ----------------
       column(
         width = 3,
         bs4Card(
@@ -18,22 +21,21 @@ mod_prod_fil_ui <- function(id) {
           width = 12,
           collapsible = FALSE,
           solidHeader = TRUE,
-          selectInput(ns("product1"), "Product 1: Manufacturer",
-                      choices = sort(unique(sia_df$manufacturer)),
-                      selected = "Apple", multiple = FALSE),
-          selectInput(ns("model1"), "Product 1: Model",
-                      choices = NULL, selected = NULL, multiple = FALSE),
 
-          selectInput(ns("product2"), "Product 2: Manufacturer",
-                      choices = sort(unique(sia_df$manufacturer)),
-                      selected = "Vrije Universiteit van Amsterdam", multiple = FALSE),
-          selectInput(ns("model2"), "Product 2: Model",
-                      choices = NULL, selected = NULL, multiple = FALSE),
+          # --- Product 1 (always prefilled) ---
+          selectInput(
+            ns("product1"), "Product 1: Manufacturer",
+            choices = sort(unique(df_sia_shiny_filters$manufacturer)),
+            selected = "Apple"
+          ),
+          selectInput(ns("model1"), "Product 1: Model", choices = NULL),
+
+          # --- Reset Product 2 & 3 ---
           div(
             style = "text-align: center; margin-bottom: 10px;",
             actionButton(
               inputId = ns("reset_prod_filter"),
-              label = "Reset Product 3",
+              label = "Reset Filter",
               status = "danger",
               outline = TRUE,
               size = "sm",
@@ -44,190 +46,271 @@ mod_prod_fil_ui <- function(id) {
               style = "border-width: 2px"
             )
           ),
-          selectInput(ns("product3"), "Product 3: Manufacturer",
-                      choices = c("Choose a product" = "", sort(unique(sia_df$manufacturer))),
-                      selected = "", multiple = FALSE),
-          selectInput(ns("model3"), "Product 3: Model",
-                      choices = NULL, selected = NULL, multiple = FALSE)
+
+          # --- Product 2 (user selects) ---
+          selectInput(
+            ns("product2"), "Product 2: Manufacturer",
+            choices  = c("Choose a product" = "", sort(unique(df_sia_shiny_filters$manufacturer))),
+            selected = ""
+          ),
+          selectInput(ns("model2"), "Product 2: Model", choices = NULL),
+
+          # --- Product 3 (unlocked after Model 2) ---
+          selectInput(
+            ns("product3"), "Product 3: Manufacturer",
+            choices  = c("Choose a product" = "", sort(unique(df_sia_shiny_filters$manufacturer))),
+            selected = ""
+          ),
+          selectInput(ns("model3"), "Product 3: Model", choices = NULL)
         )
       ),
-      bs4Card(
-        title = "Comparison Table",
-        status = "primary",
+
+      # ---------------- RIGHT RESULTS PANEL ----------------
+      column(
         width = 9,
-        collapsible = FALSE,
-        solidHeader = TRUE,
-        div(
-          style = "text-align: center; margin-bottom: 10px;",
-          downloadButton(ns("download_data"), "Download Filtered Products")
-        ),
-        reactableOutput(ns("prod_filtered_table")) %>% withSpinner(),
-        footer = tags$div(
-          "Source: Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. ",
-          "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information. ",
-          tags$em("Behav Res Methods."),
-          " 2025 May 13;57(6):171. doi: ",
-          tags$a(
-            href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
-            target = "_blank",
-            "10.3758/s13428-025-02685-4"
+        bs4Card(
+          title = "Comparison Table",
+          status = "primary",
+          width = 12,
+          collapsible = FALSE,
+          solidHeader = TRUE,
+
+          # --- Glossary Info + Download Button ----
+          div(
+            style = "display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;",
+            actionButton(
+              inputId = ns("glossary_info"),
+              label   = tagList(
+                icon("info-circle", style = "color: #1c75bc;"),
+                "Table Information"
+              ),
+              status  = "success",
+              outline = TRUE,
+              size    = "sm",
+              flat    = TRUE,
+              width   = "20%",
+              class   = "glossary-info-btn",
+              style   = "border-width: 2px;"
+            ),
+            downloadButton(ns("download_data"), "Download Filtered Results")
           ),
-          "; PMID: 40360861; PMCID: ",
-          tags$a(
-            href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075381/",
-            target = "_blank",
-            "PMC12075381"
-          ),
-          style = "font-family: sans-serif; font-size: 10pt; color: #8C8C8C;"
+
+          reactableOutput(ns("prod_filtered_table")) %>% withSpinner(),
+
+          footer = div(
+            "Source: Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E. ",
+            "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information. ",
+            em("Behav Res Methods."),
+            " 2025 May 13;57(6):171. doi: ",
+            a(
+              href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
+              target = "_blank",
+              "10.3758/s13428-025-02685-4"
+            ),
+            "; PMID: 40360861; PMCID: ",
+            a(
+              href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC12075381/",
+              target = "_blank",
+              "PMC12075381"
+            ),
+            style = "font-family: sans-serif; font-size: 10pt; color: #8C8C8C;"
+          )
         )
       )
     )
   )
 }
 
-# Function to create the Server logic
-mod_prod_fil_server <- function(id, sia_df) {
+# Product Filter Module (Server)
+mod_prod_fil_server <- function(id, df_sia_shiny_filters) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # ---------- INITIAL DISABLE STATE ----------
+    disable("model2")
+    disable("product3")
     disable("model3")
 
+    # ---------------- PRODUCT 1 ----------------
     observeEvent(input$product1, {
-      df <- sia_df()
-      updateSelectInput(session, "model1", choices = sort(unique(df$model[df$manufacturer == input$product1])))
-    })
+      df <- df_sia_shiny_filters()
+      m_choices <- sort(unique(df$model[df$manufacturer == input$product1]))
+      if (length(m_choices) == 0) {
+        updateSelectInput(session, "model1", choices = character(0), selected = "")
+      } else {
+        sel <- if (!is.null(input$model1) && input$model1 %in% m_choices) input$model1 else m_choices[1]
+        updateSelectInput(session, "model1", choices = m_choices, selected = sel)
+      }
+    }, ignoreInit = FALSE)
 
+    # ---------------- PRODUCT 2 ----------------
     observeEvent(input$product2, {
-      df <- sia_df()
-      updateSelectInput(session, "model2", choices = sort(unique(df$model[df$manufacturer == input$product2])))
+      df <- df_sia_shiny_filters()
+
+      if (is.null(input$product2) || input$product2 == "") {
+        disable("model2")
+        disable("product3")
+        disable("model3")
+        updateSelectInput(session, "model2", choices = character(0), selected = "")
+        updateSelectInput(session, "product3", selected = "")
+        updateSelectInput(session, "model3", choices = character(0), selected = "")
+      } else {
+        # enable model2 but don't preselect (like model3)
+        enable("model2")
+        m2_choices <- sort(unique(df$model[df$manufacturer == input$product2]))
+        updateSelectInput(
+          session, "model2",
+          choices  = c("Choose a model" = "", m2_choices),
+          selected = ""   # user must choose manually
+        )
+        disable("product3")
+        disable("model3")
+      }
     })
 
+    # ---------------- MODEL 2 ----------------
+    observeEvent(input$model2, {
+      if (!is.null(input$model2) && nzchar(input$model2)) {
+        enable("product3")
+      } else {
+        disable("product3")
+        disable("model3")
+        updateSelectInput(session, "product3", selected = "")
+        updateSelectInput(session, "model3", choices = character(0), selected = "")
+      }
+    })
+
+    # ---------------- PRODUCT 3 ----------------
     observeEvent(input$product3, {
-      df <- sia_df()
-      if (input$product3 == "None" || input$product3 == "") {
+      df <- df_sia_shiny_filters()
+      if (is.null(input$product3) || input$product3 == "" || input$product3 == "None") {
         disable("model3")
         updateSelectInput(session, "model3", choices = character(0), selected = "")
       } else {
         enable("model3")
-        updateSelectInput(session, "model3", choices = c("Choose a model" = "", sort(unique(df$model[df$manufacturer == input$product3]))))
+        m3_choices <- sort(unique(df$model[df$manufacturer == input$product3]))
+        updateSelectInput(
+          session, "model3",
+          choices  = c("Choose a model" = "", m3_choices),
+          selected = ""
+        )
       }
     })
 
+    # ---------------- REACTIVE SELECTED PRODUCTS ----------------
     selected_products <- reactive({
-      df <- sia_df()
+      df <- df_sia_shiny_filters()
+      rows <- list()
 
-      rows <- list(
-        df %>% filter(manufacturer == input$product1, model == input$model1),
-        df %>% filter(manufacturer == input$product2, model == input$model2)
-      )
+      if (!is.null(input$model1) && nzchar(input$model1))
+        rows[[length(rows) + 1]] <- df %>% filter(manufacturer == input$product1, model == input$model1)
 
-      if (!is.null(input$model3) && nzchar(input$model3)) {
-        rows <- c(rows,
-                  list(df %>% filter(manufacturer == input$product3,
-                                     model == input$model3)))
-      }
+      if (!is.null(input$product2) && nzchar(input$product2) &&
+          !is.null(input$model2) && nzchar(input$model2))
+        rows[[length(rows) + 1]] <- df %>% filter(manufacturer == input$product2, model == input$model2)
 
-      bind_rows(rows) %>%
-        distinct(manufacturer, model, .keep_all = TRUE)   # <- NEW
+      if (!is.null(input$product3) && nzchar(input$product3) &&
+          !is.null(input$model3) && nzchar(input$model3))
+        rows[[length(rows) + 1]] <- df %>% filter(manufacturer == input$product3, model == input$model3)
+
+      if (length(rows) == 0) return(df[0, , drop = FALSE])
+      bind_rows(rows) %>% distinct(manufacturer, model, .keep_all = TRUE)
     })
 
+    # ---------------- RENDER TABLE ----------------
     output$prod_filtered_table <- renderReactable({
-      # 1) get selected rows
       df <- selected_products()
-
-      # format release year if present
-      if ("release_date" %in% names(df)) {
-        df$release_date <- format(df$release_date, "%Y")
+      if (nrow(df) == 0) {
+        return(reactable(data.frame(Message = "Please select at least one valid product/model."),
+                         searchable = FALSE, pagination = FALSE))
       }
+      df$release_year <- format(df$release_year, "%Y")
 
-      # 2) transpose to features-as-rows, models-as-columns
       df_t <- df %>%
-        select(-manufacturer, -model) %>%
+        select(-manufacturer, -model, -device_id) %>%
         t() %>%
         as.data.frame(stringsAsFactors = FALSE)
-
       colnames(df_t) <- paste0(df$manufacturer, " – ", df$model)
-      # keep internal variable name BEFORE renaming
       df_t <- cbind(Feature_internal = rownames(df_t), df_t)
       rownames(df_t) <- NULL
-
-      # display name
       df_t$Feature <- rename_map[df_t$Feature_internal] %||% df_t$Feature_internal
 
-      # columns to render
       transposed_cols <- setdiff(names(df_t), c("Feature", "Feature_internal"))
+      col_defs <- list(Feature = colDef(name = "Product - Model", minWidth = 50, style = list(fontWeight = "bold")))
 
-      col_defs <- list(
-        Feature = colDef(name = "Feature", minWidth = 50, style = list(fontWeight = "bold"))
-      )
-
-      # 3) per-column cell renderer (bars -> yes/no -> numeric heat -> plain)
       for (col in transposed_cols) {
         col_defs[[col]] <- colDef(cell = function(value, index) {
-          # bars
+          if (df_t$Feature_internal[index] == "website" && !is.na(value) && nzchar(value)) {
+            thumb <- paste0("https://s.wordpress.com/mshots/v1/", value, "?w=400")
+            return(a(href = value, target = "_blank",
+                     div(class = "website-thumb-container",
+                         img(src = thumb, loading = "lazy",
+                             onerror = "this.style.display='none'; this.parentElement.textContent='Preview unavailable';",
+                             class = "website-thumb-img"))))
+          }
           rendered <- func_bar_row_defs(value, index, df_t$Feature, bar_vars, rename_map)
           if (!identical(rendered, value)) return(rendered)
-
-          # yes/no
           rendered <- func_yn_row_defs(value, index, df_t$Feature, yn_vars, rename_map)
           if (!identical(rendered, value)) return(rendered)
-
-          # numeric (row-aware; uses Feature_internal + global pal_num_scale)
-          rendered <- func_numeric_row_defs(
-            value, index,
-            feature_internal    = df_t$Feature_internal,
-            numeric_vars        = numeric_vars,
-            numeric_var_ranges  = numeric_var_ranges,
-            palette             = pal_num_scale
-          )
+          rendered <- func_numeric_row_defs(value, index,
+                                            feature_internal = df_t$Feature_internal,
+                                            numeric_vars = numeric_vars,
+                                            numeric_var_ranges = numeric_var_ranges,
+                                            palette = pal_num_scale)
           if (!identical(rendered, value)) return(rendered)
-
-          # fallback
           value
         })
       }
 
-
-      # 4) render table
-      reactable(
-        df_t[, c("Feature", "Feature_internal", transposed_cols)],
-        columns = c(
-          col_defs,
-          list(Feature_internal = colDef(show = FALSE)) # hide helper column
-        ),
-        height = (nrow(df_t) * 0.5) * 40,
-        bordered = TRUE,
-        highlight = TRUE,
-        pagination = FALSE,
-        searchable = TRUE,
-        fullWidth = TRUE,
-        resizable = TRUE
-      )
+      reactable(df_t[, c("Feature", "Feature_internal", transposed_cols)],
+                columns = c(col_defs, list(Feature_internal = colDef(show = FALSE))),
+                height = (nrow(df_t) * 0.5) * 40,
+                bordered = TRUE, highlight = TRUE, pagination = FALSE,
+                searchable = TRUE, fullWidth = TRUE, resizable = TRUE)
     })
 
-    #reset option 3
+    # ---------------- RESET ----------------
     observeEvent(input$reset_prod_filter, {
+      # Reset Product 2 + Model 2
+      updateSelectInput(session, "product2", selected = "")
+      updateSelectInput(session, "model2", choices = character(0), selected = "")
+      disable("model2")
+
+      # Reset Product 3 + Model 3
       updateSelectInput(session, "product3", selected = "")
       updateSelectInput(session, "model3", choices = character(0), selected = "")
+      disable("product3")
       disable("model3")
     })
 
-
     output$download_data <- downloadHandler(
-      filename = function() paste0("sia_product_filter_data_", format(Sys.Date(), "%Y%m%d"), ".csv"),
+      filename = function() {
+        paste0("sia_product_filter_data_", format(Sys.Date(), "%Y%m%d"), ".xlsx")
+      },
       content = function(file) {
-        write.csv(selected_products(), file, row.names = FALSE, na = "")
-        cat(
-          "\n# Citation terms.\n",
-          "# Thank you for using the Stress-in-Action Wearable Database!\n",
-          "# If you use the SiA-WD and/or this web app you must cite:\n",
-          "# Schoenmakers M Saygin M Sikora M Vaessen T Noordzij M de Geus E. Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical reliability validity and usability information. Behav Res Methods. 2025 May 13 57(6):171. doi: 10.3758/s13428-025-02685-4. PMID: 40360861 PMCID: PMC12075381.\n",
-          "# [Shiny paper comming soon]\n",
-          file = file, append = TRUE, sep = ""
+        selected_ids <- selected_products()$device_id
+        export_df <- df_sia_osf %>%
+          filter(device_id %in% selected_ids) %>%
+          as.data.frame()
+
+        citation_text <- data.frame(
+          Citation = c(
+            "Thank you for using the Stress-in-Action Wearable Database!",
+            "If you use the SiA-WD and/or this web app you must cite:",
+            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
+            "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information.",
+            "Behav Res Methods. 2025 May 13;57(6):171.",
+            "doi: 10.3758/s13428-025-02685-4. PMID: 40360861; PMCID: PMC12075381.",
+            "[Shiny paper coming soon]"
+          )
+        )
+
+        write_xlsx(
+          list("Selected_Devices" = export_df, "Citation" = citation_text),
+          path = file
         )
       },
-      contentType = "text/csv"
+      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
   })
 }
-

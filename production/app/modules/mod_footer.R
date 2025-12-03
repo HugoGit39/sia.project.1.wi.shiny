@@ -1,10 +1,12 @@
 ############################################################################################
 #
-#  Function nodule for footer
+# Module for footer
+#
+# Stress in Action 2025
 #
 #############################################################################################
 
-# App Info Module (UI)
+# Footer Module (UI)
 mod_footer_ui <- function(id) {
   ns <- NS(id)
 
@@ -38,12 +40,12 @@ mod_footer_ui <- function(id) {
           )
         )
       ),
-      right = tags$span(style = "color:#1c75bc;",
+      right = span(style = "color:#1c75bc;",
                         "Copyright 2025 | Stress in Action | All rights Reserved")
     )
 }
 
-# App Info Module (Server)
+# Footer Module (Server)
 mod_footer_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     # No server-side logic needed for static content

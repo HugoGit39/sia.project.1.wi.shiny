@@ -1,6 +1,8 @@
 ############################################################################################
 #
-#  Function reset fields
+# Function reset fields
+#
+# Stress in Action 2025
 #
 #############################################################################################
 
@@ -30,8 +32,6 @@ reset_inputs_sub_data <- function(session, input) {
   updateSwitchInput(session, "draft_ok", value = FALSE)
   disable("draft_ok")
 }
-
-
 
 # Generic reset for the Contact form
 reset_inputs_contact <- function(session) {

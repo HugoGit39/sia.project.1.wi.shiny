@@ -1,6 +1,8 @@
 ############################################################################################
 #
-#  Function for app info
+# Module for app info
+#
+# Stress in Action 2025
 #
 #############################################################################################
 
@@ -21,7 +23,7 @@ mod_app_info_ui <- function(id) {
           solidHeader = TRUE,
           width = 12,
           collapsible = FALSE,
-          tags$img(src = "info_app_beh_paper.png", width = "100%", style = "margin-top: 10px;"),
+          img(src = "info_app_beh_paper.png", width = "100%", style = "margin-top: 10px;"),
           footer = tagList(
             actionButton(
               inputId = "copy_citation_btn",
@@ -47,10 +49,10 @@ mod_app_info_ui <- function(id) {
           footer = div(
             style = "padding-top: 10px;",
             div(style = "text-align: center; font-size: 18px;",
-                p(strong(paste(n_wearables, "Wearables included"), style = "color: #f15a29;"),
-                  br(),
-                  "see the sidebar", tags$img(src = "controlbar.png", width = "15px", height = "15px"), "at the top right corner for an overview of", br(), "wearables and glossary."
-                )
+              p(strong(paste(n_wearables, "Wearables included"), style = "color: #f15a29;"),
+                br(),
+                "see the ", icon("info-circle", style = "color:#1c75bc;"), " button in the top right for an overview ", br(), "of wearables and glossary."
+              )
             )
           )
         )
@@ -80,6 +82,10 @@ mod_app_info_ui <- function(id) {
             "."
           ),
           p(strong("Using this app")),
+          p(
+            "This app is designed for desktop use and is not optimized for mobile devices.",
+            style = "text-align: justify;"
+          ),
           p(
             "Go to the ", strong("Filters"), " section to explore wearables based on your criteria.",
             style = "text-align: justify;"
@@ -112,7 +118,7 @@ mod_app_info_ui <- function(id) {
             style = "text-align: justify;"
           )
         )
-        ),
+      ),
       column(width = 3),  # spacer
 
       column(
@@ -127,9 +133,10 @@ mod_app_info_ui <- function(id) {
             collapsible = FALSE,
             headerBorder = FALSE,
             style = "max-height: 300px; overflow-y: auto;",
+            p(strong("December 2025"), br(), "Huge update: all details wearables available plus improved user expierence (hoovering info etc.)"),
             p(strong("September 2025"), br(), "Live release."),
             p(strong("August 2025"), br(), "Tables updated with bars, yes/no and color coded cells."),
-            p(strong("July 2025"), br(), "60 wearables still to be tested."),
+            p(strong("July 2025"), br(), "Submit Data module live."),
             p(strong("June 2025"), br(), "54 wearables included in App."),
             p(strong("May 2025"), br(), "Stress in Action wearables database paper published!"),
             p(strong("March 2025"), br(), "Feature Filter live."),

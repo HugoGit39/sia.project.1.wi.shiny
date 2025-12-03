@@ -312,6 +312,22 @@ mod_sub_data__server <- function(id) {
       )
     })
 
+    # --- download + submit logic (now Excel only) ---
+    output$dl_xlsx_submit <- downloadHandler(
+      filename = function() {
+        paste0("sia_data_submission", ".xlsx")
+      },
+      content = function(file) {
+        df <- req(last_submission())
+        write_xlsx(list("Submission" = df), path = file)
+      },
+      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
+
+    observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
+
     # --- submission event (send + reset) ---
     observeEvent(input$submit_final, {
       df <- build_form()
@@ -343,22 +359,5 @@ mod_sub_data__server <- function(id) {
 
       send_email(body = body, subject = subject, attachment = excel_path)
     })
-
-    # --- download + submit logic (now Excel only) ---
-    output$dl_xlsx_submit <- downloadHandler(
-      filename = function() {
-        paste0("sia_data_submission", ".xlsx")
-      },
-      content = function(file) {
-        df <- req(last_submission())
-        write_xlsx(list("Submission" = df), path = file)
-      },
-      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
-    outputOptions(output, "dl_xlsx_submit", suspendWhenHidden = FALSE)
-
-    observe({ toggleState("submit_final", condition = isTRUE(input$draft_ok)) })
-
   })
 }

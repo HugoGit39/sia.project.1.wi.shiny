@@ -1,23 +1,26 @@
 ############################################################################################
 #
-#  Function module for navbar
+# Module for navbar
+#
+# Stress in Action 2025
 #
 #############################################################################################
 
-# Navbar UI Module
+# Header Module (UI)
 mod_header_ui <- function(id) {
   ns <- NS(id)
 
   bs4DashNavbar(
     titleWidth = 220,
-    title = tags$a(
+    title = a(
       href = "https://www.stressinaction.nl", target = "_blank",
-      tags$img(
+      img(
         src = "SiA_Logo_png.png",
         height = "55px",
         style = "margin-top: 10px; margin-bottom: 10px; margin-left: 15px; margin-right: 15px;"
       )
     ),
+    controlbarIcon = icon("info-circle", style = "color:#1c75bc;"),
     rightUi = tagList(
       tags$li(class = "dropdown", searchbar(inputId = ns("Search"), placeholder = "Search text here...", contextId = "body_app"))
     ),
@@ -27,8 +30,8 @@ mod_header_ui <- function(id) {
       navbarTab(
         text = "Filters",
         dropdownHeader(""),
-        navbarTab(tabName = "product_filter", text = "Product Filter (simple)"),
-        navbarTab(tabName = "feature_filter", text = "Feature Filter (extensive)")
+        navbarTab(tabName = "product_filter", text = "Product Filter"),
+        navbarTab(tabName = "feature_filter", text = "Feature Filter")
       ),
       navbarTab(tabName = "submit_data", text = "Submit Data"),
       navbarTab(tabName = "article", text = "Research"),
@@ -38,7 +41,7 @@ mod_header_ui <- function(id) {
   )
 }
 
-# Navbar Server Module
+# Header Module (Server)
 mod_header_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 

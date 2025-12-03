@@ -1,10 +1,12 @@
 ############################################################################################
 #
-#  Function nodule  for Article
+# Module for Article
+#
+# Stress in Action 2025
 #
 #############################################################################################
 
-# ui
+# Article Module (UI)
 mod_article_ui <- function(id) {
   ns <- NS(id)
 
@@ -45,7 +47,7 @@ mod_article_ui <- function(id) {
                 width = 12,
                 style = "height: 450px; overflow-y: auto;",
                 p(
-                  "Device-specific information was obtained from the device manual, while reliability, validity, and usability were assessed through a structured literature search (click SiA gauge) using the following string:", style = "text-align: justify;"),
+                  "Device-specific information was obtained from the device manual, while reliability, validity, and usability were assessed through a structured literature search (click i icon) using the following string:", style = "text-align: justify;"),
                   p("“((Device Name) AND (valid* OR reliab* OR compar* OR accur* OR verif* OR usab* OR 'user experience' OR 'user friend*' OR user-friend*)”.", style = "text-align: justify;"),
                   p("Included studies assessed parameter-level convergent validity, test-retest reliability, and/or usability, focused on convergent validity, and were published as peer-reviewed articles or conference proceedings in English. Excluded were studies on construct validity only, those involving machine learning-based detection of secondary outcomes, meta-analyses, reviews, theses, grey literature, and any non-peer-reviewed texts.",
                   style = "text-align: justify;"
@@ -54,8 +56,12 @@ mod_article_ui <- function(id) {
                   id = "sb_kr",
                   width = 100,
                   background = "white",
-                  icon = tags$img(src = "favicon.ico", height = 25, width = 25),
-                  tags$img(
+                  icon = icon(
+                    "info-circle",
+                    class = "fa-lg",
+                    style = "color: #1c75bc;"
+                  ),
+                  img(
                     src = "article_asreview_process.png",
                     style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
                   )
@@ -73,7 +79,7 @@ mod_article_ui <- function(id) {
                 style = "height: 450px; overflow-y: auto;",
                 p(
                   "Different criteria were rank-ordered in importance by the curators to score a device for short-term (2-day) and long-term (2+ week) research use.", style = "text-align: justify;"),
-                p("Based on these criteria (click SiA gauge), each device was independently scored from 0 to 10 by the three first co-authors, who were blinded to each other's scores; these scores were then averaged to generate the short- and long-term \"SiA expert scores.\" ", style = "text-align: justify;"),
+                p("Based on these criteria (click i icon), each device was independently scored from 0 to 10 by the three first co-authors, who were blinded to each other's scores; these scores were then averaged to generate the short- and long-term \"SiA expert scores.\" ", style = "text-align: justify;"),
                 p("High interrater reliability was achieved for both short-term (r = .87, 95% CI = [.78, .92], F(50, 100) = 8.0, p < .001) and long-term use (r = .85, 95% CI = [.76, .91], F(50, 100) = 6.6, p < .001).",
                   style = "text-align: justify;"
                 ),
@@ -81,12 +87,16 @@ mod_article_ui <- function(id) {
                   id = "sb_sia_es",
                   width = 100,
                   background = "white",
-                  icon = tags$img(src = "favicon.ico", height = 25, width = 25),
-                  tags$img(
+                  icon = icon(
+                    "info-circle",
+                    class = "fa-lg",
+                    style = "color: #1c75bc;"
+                  ),
+                  img(
                     src = "article_long_term_sia_es.png",
                     style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
                   ),
-                  tags$img(
+                  img(
                     src = "article_short_term_sia_es.png",
                     style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
                   )
@@ -128,13 +138,13 @@ mod_article_ui <- function(id) {
           footer = NULL,
           solidHeader = TRUE,
           status = "primary",
-          tags$div(
+          div(
             style = "text-align: center; margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem;",
-            downloadButton(ns("download_pdf"), "Download PDF", class = "btn-primary"),
-            tags$a(
+            downloadButton(ns("download_pdf"), "Download PDF"),
+            a(
               href = "https://link.springer.com/article/10.3758/s13428-025-02685-4",
               target = "_blank",
-              tags$img(
+              img(
                 src = "springer_link.png",
                 height = "40px",  # adjust size as needed
                 alt = "Springer Link"
@@ -156,13 +166,14 @@ mod_article_ui <- function(id) {
           solidHeader = TRUE,
           width = 12,
           collapsible = FALSE,
-          tags$p("Coming soon")
+          p("Coming soon")
         )
       )
     )
   )
 }
 
+# Article Module (Server)
 mod_article_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     output$download_pdf <- downloadHandler(
