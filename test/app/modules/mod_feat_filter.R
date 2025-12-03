@@ -506,45 +506,37 @@ mod_feat_fil_server <- function(id, data) {
     })
 
     # --- 10. Download filtered results (Excel) ----
-    # --- 10. Download filtered results (Excel) ----
     output$download_data <- downloadHandler(
       filename = function() {
         paste0("sia_feature_filter_data_", format(Sys.Date(), "%Y%m%d"), ".xlsx")
       },
       content = function(file) {
-        # Use the same data as the table: filtered + info
-        df_out <- filtered_data() %>%
-          left_join(df_sia_shiny_info, by = "device_id") %>%
+        # Get selected device IDs from the filtered data
+        selected_ids <- filtered_data()$device_id
+
+        # Export full OSF data for those devices
+        export_df <- df_sia_osf %>%
+          filter(device_id %in% selected_ids) %>%
           as.data.frame()
 
-        # Optional: format release_year nicely for export
-        if ("release_year" %in% names(df_out)) {
-          df_out$release_year <- format(df_out$release_year, "%Y")
+        # Format release year if present
+        if ("release_year" %in% names(export_df)) {
+          export_df$release_year <- format(export_df$release_year, "%Y")
         }
 
-        citation_text <- data.frame(
-          Citation = c(
-            "Thank you for using the Stress-in-Action Wearable Database!",
-            "If you use the SiA-WD and/or this web app you must cite:",
-            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
-            "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information.",
-            "Behav Res Methods. 2025 May 13;57(6):171.",
-            "doi: 10.3758/s13428-025-02685-4. PMID: 40360861; PMCID: PMC12075381.",
-            "[Shiny paper coming soon]"
-          ),
-          check.names = FALSE
-        )
-
+        # Write Excel with all tabs
         write_xlsx(
           list(
-            "Filtered_Devices" = df_out,
-            "Citations"         = citation_text
+            "Selected_Devices" = export_df,
+            "Citations"        = df_citations,
+            "Codebook"         = df_codebook
           ),
           path = file
         )
       },
       contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
     # --- 11. Download filter settings (Excel) ----
     output$download_filter_settings <- downloadHandler(
@@ -584,23 +576,11 @@ mod_feat_fil_server <- function(id, data) {
         df_settings <- data.frame(t(unlist(settings)), check.names = FALSE)
         names(df_settings) <- names(settings)
 
-        citation_df <- data.frame(
-          Citation = c(
-            "Thank you for using the SiA-WD!",
-            "If you use the database and/or this web app, you must cite:",
-            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
-            "Stress in action wearables database: A database of noninvasive wearable monitors",
-            "with systematic technical, reliability, validity, and usability information.",
-            "Behav Res Methods. 2025 May 13;57(6):171.",
-            "doi: 10.3758/s13428-025-02685-4."
-          ),
-          check.names = FALSE
-        )
-
         write_xlsx(
           list(
             "Filter settings" = df_settings,
-            "Citations"        = citation_df
+            "Citations"        = df_citations,
+            "Codebook" = df_codebook
           ),
           path = file
         )

@@ -181,7 +181,22 @@ rename_subm <- rename_subm[!rename_subm %in% c("sia_es_long", "sia_es_short")]
 
 rename_subm <- c("name", "email", "telephone", "institution", rename_subm, "additional_information")
 
-#  * 11 Time-out message -----------------------------------------------
+#  * 11 Citations -----------------------------------------------
+
+df_citations <- data.frame(
+  Citation = c(
+    "Thank you for using the SiA-WD!",
+    "If you use the database and/or this web app, you must cite:",
+    "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
+    "Stress in action wearables database: A database of noninvasive wearable monitors",
+    "with systematic technical, reliability, validity, and usability information.",
+    "Behav Res Methods. 2025 May 13;57(6):171.",
+    "doi: 10.3758/s13428-025-02685-4."
+  ),
+  check.names = FALSE
+)
+
+#  * 12 Time-out message -----------------------------------------------
 disconnected <- tagList(
   p(strong("Time Out!", style = "color: #1c75bc; font-size:30px")),
   p(tags$img(src = "favicon.ico", height = 100, width = 100)),

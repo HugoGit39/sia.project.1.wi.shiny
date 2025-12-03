@@ -293,22 +293,10 @@ mod_prod_fil_server <- function(id, df_sia_shiny_filters) {
           filter(device_id %in% selected_ids) %>%
           as.data.frame()
 
-        citation_text <- data.frame(
-          Citation = c(
-            "Thank you for using the Stress-in-Action Wearable Database!",
-            "If you use the SiA-WD and/or this web app you must cite:",
-            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
-            "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information.",
-            "Behav Res Methods. 2025 May 13;57(6):171.",
-            "doi: 10.3758/s13428-025-02685-4. PMID: 40360861; PMCID: PMC12075381.",
-            "[Shiny paper coming soon]"
-          )
-        )
-
         write_xlsx(
           list(
             "Selected_Devices" = export_df,
-            "Citations" = citation_text,
+            "Citations"        = df_citations,
             "Codebook" = df_codebook
           ),
           path = file
