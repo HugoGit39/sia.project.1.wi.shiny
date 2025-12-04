@@ -623,7 +623,7 @@ mod_feat_fil_server <- function(id, data) {
           list(
             "Selected Devices" = export_df,
             "Citations"        = df_citations,
-            "Codebook"         = df_codebook
+            "Glossary"         = df_codebook
           ),
           path = file
         )
