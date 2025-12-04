@@ -16,7 +16,7 @@ mod_feat_fil_ui <- function(id) {
         width = 3,
         div(
           style = "
-            max-height: calc(100vh - 100px);  /* adjust if you have navbar/footer */
+            max-height: calc(100vh - 0px);  /* adjust if you have navbar/footer */
             overflow-y: auto;
           ",
           bs4Card(
@@ -199,7 +199,7 @@ mod_feat_fil_ui <- function(id) {
               collapsible = FALSE,
               sliderInput(
                 ns("usability_n_of_studies"),
-                label = "# Usability Studies",
+                label = "Usability Studies (n)",
                 min   = 0,
                 max   = max(df_sia_shiny_filters$usability_n_of_studies, na.rm = TRUE),
                 value = c(0, max(df_sia_shiny_filters$usability_n_of_studies, na.rm = TRUE)),
@@ -207,7 +207,7 @@ mod_feat_fil_ui <- function(id) {
               ),
               sliderInput(
                 ns("validity_and_reliability_n_of_studies"),
-                label = "# Validity & Reliability Studies",
+                label = "Validity & Reliability Studies (n)",
                 min   = 0,
                 max   = max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE),
                 value = c(0, max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE)),
@@ -479,72 +479,158 @@ mod_feat_fil_server <- function(id, data) {
 
         # --- Custom click handler for popup details ---
         onClick = JS(sprintf("
-      function(rowInfo, column) {
-        if (column.id !== 'details') return;
+  function(rowInfo, column) {
+    if (column.id !== 'details') return;
 
-        const values    = rowInfo.values;
-        const infoCols  = %s;
-        let lines = [];
+    const values   = rowInfo.values;
+    const infoCols = %s;
+    let lines = [];
 
-        infoCols.forEach(function(col) {
-          if (values[col] !== undefined && values[col] !== null && values[col] !== '') {
-            lines.push(col + ': ' + values[col]);
-          }
-        });
-
-        if (lines.length === 0) {
-          window.alert('No additional details available for this device.');
-        } else {
-          window.alert(
-            'Details for ' + (values.manufacturer || '') + ' – ' + (values.model || '') + ':\\n\\n' +
-            lines.join('\\n')
-          );
-        }
+    infoCols.forEach(function(col) {
+      if (values[col] !== undefined && values[col] !== null && values[col] !== '') {
+        lines.push(col + ': ' + values[col]);
       }
-    ", info_cols_js))
+    });
+
+    if (lines.length === 0) {
+      window.alert('No additional details available for this device.');
+      return;
+    }
+
+    // ---- create modal once ----
+    let modal = document.getElementById('details-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'details-modal';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%%';
+      modal.style.height = '100%%';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+      modal.style.zIndex = '9999';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.fontFamily = 'inherit';
+
+      const box = document.createElement('div');
+      box.id = 'details-modal-box';
+      box.style.backgroundColor = 'white';
+      box.style.maxWidth = '700px';
+      box.style.width = '90%%';
+      box.style.maxHeight = '80%%';
+      box.style.padding = '20px 20px 16px 20px';
+      box.style.borderRadius = '8px';
+      box.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+      box.style.display = 'flex';
+      box.style.flexDirection = 'column';
+      box.style.position = 'relative';
+      box.style.fontFamily = 'inherit';
+
+      const header = document.createElement('div');
+      header.style.display = 'flex';
+      header.style.justifyContent = 'flex-start';
+      header.style.alignItems = 'center';
+
+      const title = document.createElement('h3');
+      title.id = 'details-modal-title';
+      title.style.margin = '0';
+      title.style.paddingRight = '40px';
+
+      header.appendChild(title);
+      box.appendChild(header);
+
+      const body = document.createElement('pre');
+      body.id = 'details-modal-body';
+      body.style.marginTop = '12px';
+      body.style.whiteSpace = 'pre-wrap';
+      body.style.overflowY = 'auto';  // vertical scrollbar
+      body.style.flex = '1';
+      body.style.fontFamily = 'inherit';
+
+      box.appendChild(body);
+
+      // ---- footer with static SiA blue Close button (bottom-right) ----
+      const footer = document.createElement('div');
+      footer.style.display = 'flex';
+      footer.style.justifyContent = 'flex-end';
+      footer.style.marginTop = '12px';
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.id = 'details-modal-close';
+      closeBtn.textContent = 'Close';
+      closeBtn.style.padding = '6px 16px';
+      closeBtn.style.borderRadius = '4px';
+      closeBtn.style.border = '1px solid #1c75bc';
+      closeBtn.style.background = '#1c75bc';   // SiA blue
+      closeBtn.style.color = 'white';          // white text
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.style.fontSize = '14px';
+      closeBtn.style.fontFamily = 'inherit';
+      closeBtn.style.fontWeight = '500';
+      closeBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+
+      closeBtn.onclick = function() {
+        modal.style.display = 'none';
+      };
+
+      footer.appendChild(closeBtn);
+      box.appendChild(footer);
+
+      modal.appendChild(box);
+      document.body.appendChild(modal);
+
+      // Close when clicking outside the box
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    }
+
+    // ---- update content & show ----
+    const titleText = 'Details for ' + (values.manufacturer || '') + ' \u2013 ' + (values.model || '');
+    document.getElementById('details-modal-title').textContent = titleText;
+    document.getElementById('details-modal-body').textContent  = lines.join('\\n');
+
+    modal.style.display = 'flex';
+  }
+", info_cols_js))
       )
     })
 
-    # --- 10. Download filtered results (Excel) ----
     # --- 10. Download filtered results (Excel) ----
     output$download_data <- downloadHandler(
       filename = function() {
         paste0("sia_feature_filter_data_", format(Sys.Date(), "%Y%m%d"), ".xlsx")
       },
       content = function(file) {
-        # Use the same data as the table: filtered + info
-        df_out <- filtered_data() %>%
-          left_join(df_sia_shiny_info, by = "device_id") %>%
+        # Get selected device IDs from the filtered data
+        selected_ids <- filtered_data()$device_id
+
+        # Export full OSF data for those devices
+        export_df <- df_sia_osf %>%
+          filter(device_id %in% selected_ids) %>%
           as.data.frame()
 
-        # Optional: format release_year nicely for export
-        if ("release_year" %in% names(df_out)) {
-          df_out$release_year <- format(df_out$release_year, "%Y")
+        # Format release year if present
+        if ("release_year" %in% names(export_df)) {
+          export_df$release_year <- format(export_df$release_year, "%Y")
         }
 
-        citation_text <- data.frame(
-          Citation = c(
-            "Thank you for using the Stress-in-Action Wearable Database!",
-            "If you use the SiA-WD and/or this web app you must cite:",
-            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
-            "Stress in action wearables database: A database of noninvasive wearable monitors with systematic technical, reliability, validity, and usability information.",
-            "Behav Res Methods. 2025 May 13;57(6):171.",
-            "doi: 10.3758/s13428-025-02685-4. PMID: 40360861; PMCID: PMC12075381.",
-            "[Shiny paper coming soon]"
-          ),
-          check.names = FALSE
-        )
-
+        # Write Excel with all tabs
         write_xlsx(
           list(
-            "Filtered_Devices" = df_out,
-            "Citations"         = citation_text
+            "Selected Devices" = export_df,
+            "Citations"        = df_citations,
+            "Codebook"         = df_codebook
           ),
           path = file
         )
       },
       contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
     # --- 11. Download filter settings (Excel) ----
     output$download_filter_settings <- downloadHandler(
@@ -584,23 +670,11 @@ mod_feat_fil_server <- function(id, data) {
         df_settings <- data.frame(t(unlist(settings)), check.names = FALSE)
         names(df_settings) <- names(settings)
 
-        citation_df <- data.frame(
-          Citation = c(
-            "Thank you for using the SiA-WD!",
-            "If you use the database and/or this web app, you must cite:",
-            "Schoenmakers M, Saygin M, Sikora M, Vaessen T, Noordzij M, de Geus E.",
-            "Stress in action wearables database: A database of noninvasive wearable monitors",
-            "with systematic technical, reliability, validity, and usability information.",
-            "Behav Res Methods. 2025 May 13;57(6):171.",
-            "doi: 10.3758/s13428-025-02685-4."
-          ),
-          check.names = FALSE
-        )
-
         write_xlsx(
           list(
             "Filter settings" = df_settings,
-            "Citations"        = citation_df
+            "Citations"        = df_citations,
+            "Glossary" = df_codebook
           ),
           path = file
         )

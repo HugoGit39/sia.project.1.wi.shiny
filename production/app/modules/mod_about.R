@@ -100,7 +100,7 @@ mod_about_ui <- function(id) {
           collapsible = FALSE,
           headerBorder = FALSE,
           p(
-            "This application is a publication of the department of Biological Psychology at the VU Amsterdam Amsterdam.",
+            "This application is a publication of the department of Biological Psychology at the VU Amsterdam.",
             style = "text-align: justify;"
           ),
           p(
@@ -174,7 +174,7 @@ mod_about_ui <- function(id) {
            div(
              style = "margin-top: 50px;",
                bs4Card(
-                 title = "Research Theme 2 (RT2) Wearabale Team",
+                 title = "Research Theme 2 (RT2) Wearable Team",
                  status = "secondary",
                  solidHeader = TRUE,
                  width = 12,

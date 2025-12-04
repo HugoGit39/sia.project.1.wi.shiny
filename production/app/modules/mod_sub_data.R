@@ -19,7 +19,7 @@ mod_sub_data_ui <- function(id) {
         width = 4,
         div(
           style = "
-        max-height: calc(100vh - 100px);  /* adjust if you have navbar/footer */
+        max-height: calc(100vh - 0px);  /* adjust if you have navbar/footer */
         overflow-y: auto;
       ",
           bs4Card(
@@ -30,6 +30,8 @@ mod_sub_data_ui <- function(id) {
             collapsible = FALSE,
             div(
               p(
+                strong("Help us expand the Stress-in-Action Wearables Database."), br(),
+                "You can contribute by submitting information about additional wearable devices not yet included. All submitted data will be thoroughly reviewed before inclusion.", br(), br(),
                 "The draft updates live as you type. Complete the mandatory fields ",
                 strong("*", style = "color: #CC6677;"),
                 " to enable submission.",
@@ -61,14 +63,14 @@ mod_sub_data_ui <- function(id) {
               uiOutput(ns("manufacturer_csv_error")),
               textInput(ns("model"), labelMandatory("Model"), placeholder = "Click and type model name"),
               textInput(ns("website"), "Website", placeholder = "Click and paste or type URL https://"),
-              dateInput(ns("release_year"), "Release Year"),
+              textInput(ns("release_year"), labelMandatory("Release Year"), placeholder = "Click and write Y, Y/M or Y/M/D"),
               text_or_selectize(ns("market_status"), labelMandatory("Market Status"), df_sia_shiny_filters, "market_status"),
               text_or_selectize(ns("main_use"), labelMandatory("Main Use"), df_sia_shiny_filters, "main_use"),
-              numericInput(ns("device_cost"), labelMandatory("Device Cost (€)"), value = NA),
+              textInput(ns("device_cost"), labelMandatory("Device Cost (€)"), placeholder = "Click and write costs + details"),
               text_or_selectize(ns("wearable_type"), labelMandatory("Type"), df_sia_shiny_filters, "wearable_type"),
               text_or_selectize(ns("location"), labelMandatory("Location"), df_sia_shiny_filters, "location"),
-              numericInput(ns("weight_gr"), labelMandatory("Weight (gr)"), value = NA),
-              textInput(ns("size_mm"), labelMandatory("Size"), placeholder = "Click and write LxWxH or DxH")
+              numericInput(ns("weight_gr"), "Weight (gr)", value = NA),
+              textInput(ns("size_mm"), "Size (mm)", placeholder = "Click and write LxWxH or DxH (mm)")
             ),
 
             # ---------------- Technical Specifications ----------------
@@ -126,8 +128,8 @@ mod_sub_data_ui <- function(id) {
               status = "secondary",
               width = 12,
               collapsible = FALSE,
-              numericInput(ns("usability_n_of_studies"), "# Usability Studies", value = NA),
-              numericInput(ns("validity_and_reliability_n_of_studies"), "# Validity & Reliability Studies", value = NA),
+              numericInput(ns("usability_n_of_studies"), "Usability Studies (n)", value = NA),
+              numericInput(ns("validity_and_reliability_n_of_studies"), "Validity & Reliability Studies (n)", value = NA),
               text_or_selectize(ns("usability_evidence_level"), "Usability Evidence Level", df_sia_shiny_filters, "usability_evidence_level"),
               text_or_selectize(ns("validity_and_reliability_evidence_level"), "Validity & Reliability Evidence Level", df_sia_shiny_filters, "validity_and_reliability_evidence_level")
             ),
@@ -138,11 +140,32 @@ mod_sub_data_ui <- function(id) {
               status = "secondary",
               width = 12,
               collapsible = FALSE,
+              div(
+                style = "text-align: center; margin-top: 8px;",
+                div(
+                  style = "text-align: left; margin-top: 8px; margin-left: 3px;",
+                  actionButton(
+                    inputId = ns("additional_info_help"),
+                    label   = tagList(
+                      icon("info-circle", style = "color: #1c75bc;"),
+                      "Details"
+                    ),
+                    status  = "success",
+                    outline = TRUE,
+                    size    = "sm",
+                    flat    = TRUE,
+                    width   = NULL,              # no fixed width → just fits 'Details'
+                    class   = "addinfo-info-btn",
+                    style   = "border-width: 2px;"
+                  )
+                )
+              ),
+              br(),
               textAreaInput(
                 ns("additional_information"),
                 "Additional Information",
                 rows = 4,
-                placeholder = "e.g. charging methods, data transfer methods, water resistance depth, sampling rates, other signals etc."
+                placeholder = "e.g. sampling rates of signals, other signals available, or references to existing reliability, validity, or usability studies, etc. See ℹ Details for more information."
               )
             )
           )

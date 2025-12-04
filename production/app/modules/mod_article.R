@@ -47,7 +47,7 @@ mod_article_ui <- function(id) {
                 width = 12,
                 style = "height: 450px; overflow-y: auto;",
                 p(
-                  "Device-specific information was obtained from the device manual, while reliability, validity, and usability were assessed through a structured literature search (click i icon) using the following string:", style = "text-align: justify;"),
+                  "Device-specific information was obtained from the device manual, while reliability, validity, and usability were assessed through a structured literature search (see", icon("info-circle", style = "color:#1c75bc;"),"for info), using the following string:", style = "text-align: justify;"),
                   p("“((Device Name) AND (valid* OR reliab* OR compar* OR accur* OR verif* OR usab* OR 'user experience' OR 'user friend*' OR user-friend*)”.", style = "text-align: justify;"),
                   p("Included studies assessed parameter-level convergent validity, test-retest reliability, and/or usability, focused on convergent validity, and were published as peer-reviewed articles or conference proceedings in English. Excluded were studies on construct validity only, those involving machine learning-based detection of secondary outcomes, meta-analyses, reviews, theses, grey literature, and any non-peer-reviewed texts.",
                   style = "text-align: justify;"
@@ -63,7 +63,7 @@ mod_article_ui <- function(id) {
                   ),
                   img(
                     src = "article_asreview_process.png",
-                    style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
+                    style = "max-width: 100%; height: auto; display: block; margin: 0 auto; margin-bottom: 15px;"
                   )
                 )
               )
@@ -79,7 +79,7 @@ mod_article_ui <- function(id) {
                 style = "height: 450px; overflow-y: auto;",
                 p(
                   "Different criteria were rank-ordered in importance by the curators to score a device for short-term (2-day) and long-term (2+ week) research use.", style = "text-align: justify;"),
-                p("Based on these criteria (click i icon), each device was independently scored from 0 to 10 by the three first co-authors, who were blinded to each other's scores; these scores were then averaged to generate the short- and long-term \"SiA expert scores.\" ", style = "text-align: justify;"),
+                p("Based on these criteria (see", icon("info-circle", style = "color:#1c75bc;"), "for info), each device was independently scored from 0 to 10 by the three first co-authors, who were blinded to each other's scores; these scores were then averaged to generate the short- and long-term \"SiA expert scores.\" ", style = "text-align: justify;"),
                 p("High interrater reliability was achieved for both short-term (r = .87, 95% CI = [.78, .92], F(50, 100) = 8.0, p < .001) and long-term use (r = .85, 95% CI = [.76, .91], F(50, 100) = 6.6, p < .001).",
                   style = "text-align: justify;"
                 ),
@@ -92,16 +92,145 @@ mod_article_ui <- function(id) {
                     class = "fa-lg",
                     style = "color: #1c75bc;"
                   ),
-                  img(
-                    src = "article_long_term_sia_es.png",
-                    style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
+
+                  # ---- SHORT-TERM ----
+                  strong("Short-term importance of criteria", style = "color:#000000;"), br(),
+                  reactable::reactable(
+                    data.frame(
+                      Criteria = c(
+                        "GDPR approval",
+                        "CE approval",
+                        "All Reliability-Validity Criteria",
+                        "Number and type of different signals that can be measured by the device (e.g., PPG, ECG, accelerometer)",
+                        "Raw data availability",
+                        "Provided parameters",
+                        "Parameter sampling window",
+                        "Price",
+                        "Wearable type, location, and weight and size",
+                        "Usability outcome (if available)",
+                        "Data Storage Capacity",
+                        "Data Transfer Method",
+                        "Data Storage Method",
+                        "Battery life",
+                        "Charging duration",
+                        "Charging method",
+                        "FDA approval",
+                        "Waterproof",
+                        "Bio-cueing",
+                        "Biofeedback"
+                      ),
+                      Importance = c(
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium/Low",
+                        "Medium/Low",
+                        "Medium/Low",
+                        "Low",
+                        "Low",
+                        "Low",
+                        "Low",
+                        "Low",
+                        "Low",
+                        "Low"
+                      ),
+                      stringsAsFactors = FALSE
+                    ),
+                    columns = list(
+                      Criteria   = colDef(name = "Criteria", width = 250),
+                      Importance = colDef(name = "Importance", width = 120, style = list(whiteSpace = "nowrap"))
+                    ),
+                    sortable   = FALSE,
+                    searchable = FALSE,
+                    pagination = FALSE,
+                    resizable  = FALSE,
+                    bordered   = TRUE,
+                    highlight  = TRUE,
+                    fullWidth  = TRUE,
+                    theme = reactableTheme(
+                      color           = "#000000",
+                      backgroundColor = "#FFFFFF",
+                      borderColor     = "#D9D9D9"
+                    )
                   ),
-                  img(
-                    src = "article_short_term_sia_es.png",
-                    style = "max-width: 100%; height: auto; display: block; margin: 0 auto;"
+
+                  br(),
+
+                  # ---- LONG-TERM ----
+                  strong("Long-term importance of criteria", style = "color:#000000;"), br(),
+                  reactable(
+                    data.frame(
+                      Criteria = c(
+                        "GDPR approval",
+                        "CE approval",
+                        "Price",
+                        "Number of different physiological parameters that can be measured by the device (e.g., HR, Skin temperature)",
+                        "Wearable type, location, and weight and size",
+                        "Usability outcome (if available)",
+                        "Battery life",
+                        "All Validity-Reliability Criteria",
+                        "Parameter sampling window",
+                        "Data Storage Capacity",
+                        "Data Transfer Method",
+                        "Data Storage Method",
+                        "Charging duration",
+                        "Charging method",
+                        "Raw data availability",
+                        "Data Transfer Compatibility",
+                        "Waterproof",
+                        "Bio-cueing",
+                        "Biofeedback",
+                        "FDA approval"
+                      ),
+                      Importance = c(
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "High",
+                        "High/Medium",
+                        "High/Medium",
+                        "High/Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium",
+                        "Medium/Low",
+                        "Medium/Low",
+                        "Medium/Low",
+                        "Low"
+                      ),
+                      stringsAsFactors = FALSE
+                    ),
+                    columns = list(
+                      Criteria   = colDef(name = "Criteria", width = 250),
+                      Importance = colDef(name = "Importance", width = 120, style = list(whiteSpace = "nowrap"))
+                    ),
+                    sortable   = FALSE,
+                    searchable = FALSE,
+                    pagination = FALSE,
+                    resizable  = FALSE,
+                    bordered   = TRUE,
+                    highlight  = TRUE,
+                    fullWidth  = F,
+                    theme = reactableTheme(
+                      color           = "#000000",
+                      backgroundColor = "#FFFFFF",
+                      borderColor     = "#D9D9D9"
+                    )
                   )
                 )
-
               )
             ),
             column(
@@ -176,6 +305,7 @@ mod_article_ui <- function(id) {
 # Article Module (Server)
 mod_article_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+
     output$download_pdf <- downloadHandler(
       filename = function() {
         "s13428-025-02685-4.pdf"

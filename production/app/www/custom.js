@@ -36,12 +36,14 @@ $(document).ready(function () {
       content: `
         <div id='glossary-popover-prod'
              style='max-height:240px; overflow-y:auto; overflow-x:hidden;
-                    text-align:left; font-size:13px; line-height:1.3; width:420px; padding-right:6px;'>
+                    text-align:left; line-height:1.3; width:420px; padding-right:6px;'>
           <b>Table Information</b><br><br>
 
           <b>SiA Scores</b><br>
           • Long-Term SiA Score — Weighted technical, usability, and reliability score for extended use (>2 week).<br>
           • Short-Term SiA Score — Weighted technical and validation score for short-term use (≤2 week).<br><br>
+
+          See the Research page for details on scoring, including criteria, procedure involved, and the interrater reliability.<br><br>
 
           <b>General Device Information</b><br>
           • Website — Link to the official device or manufacturer page.<br>
@@ -92,7 +94,7 @@ $(document).ready(function () {
           • Usability Evidence Level — Evidence quality for usability (external > internal > none).<br>
           • Validity & Reliability Evidence Level — Evidence quality for validation and reliability (external > internal > none).<br><br>
 
-          For full glossary, see sidebar.
+          For full glossary, see sidebar&nbsp;<i class="fa fa-info-circle" style="color:#1c75bc;"></i>
         </div>
       `
     });
@@ -129,6 +131,125 @@ $(document).ready(function () {
 
 /* 3. Data*/
 
+$(document).ready(function () {
+
+  // delegate to document so it also works for dynamically added buttons
+  var addinfoPopoverInitialized = false;
+
+  function ensureAddinfoPopover(btn) {
+    if (btn.data('bs.popover')) return;  // already initialized
+
+    btn.popover({
+      html: true,
+      trigger: 'manual',
+      placement: 'bottom',
+      container: 'body',
+      sanitize: false,
+      template:
+        '<div class="popover" role="tooltip" style="max-width:450px !important;">' +
+        '<div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+      content: `
+        <div id='addinfo-popover'
+             style='max-height:240px; overflow-y:auto; overflow-x:hidden;
+                    text-align:left; line-height:1.3; width:420px; padding-right:6px;'>
+          <b>Optional additional information you can provide</b><br><br>
+
+          <b>Costs & basic specs</b><br>
+          • device_cost_info<br>
+          • battery_life_spec_num_unit<br>
+          • charging_duration_spec_num_unit<br>
+          • charging_method_spec_char_value<br>
+          • water_resistance_spec_char_value<br><br>
+
+          <b>Signal sampling rates</b><br>
+          • accelerometer_sampling_rate_max<br>
+          • eda_sampling_rate_max<br>
+          • ppg_sampling_rate_max<br>
+          • skin_temperature_sampling_rate_max<br><br>
+
+          <b>Signal details</b><br>
+          • accelerometer_additional_info<br>
+          • eda_additional_info<br>
+          • other_signals_additional_info<br>
+          • ppg_additional_info<br>
+          • skin_temperature_additional_info<br><br>
+
+          <b>Recording locations</b><br>
+          • accelerometer_recording_location<br>
+          • eda_recording_location<br>
+          • ppg_recording_location<br>
+          • skin_temperature_recording_location<br><br>
+
+          <b>Compatibility & software (yes/no)</b><br>
+          • android_compatible_spec_boel_value<br>
+          • ios_compatible_spec_boel_value<br>
+          • macos_compatible_spec_boel_value<br>
+          • windows_compatible_spec_boel_value<br>
+          • software_required_spec_boel_value<br>
+          • software_additional_spec_boel_value<br><br>
+
+          <b>Storage capacity</b><br>
+          • dev_storage_cap_hr_spec_num_unit<br>
+          • dev_storage_cap_mb_spec_num_unit<br><br>
+
+          <b>Compatibility & software details</b><br>
+          • android_compatible_spec_char_value<br>
+          • ios_compatible_spec_char_value<br>
+          • macos_compatible_spec_char_value<br>
+          • windows_compatible_spec_char_value<br>
+          • data_transfer_method_spec_char_value<br>
+          • int_storage_met_spec_char_value<br>
+          • server_data_storage_spec_char_value<br>
+          • software_required_spec_char_value<br>
+          • software_additional_spec_char_value<br>
+          • parameters_available_spec_char_value<br>
+          • parameters_resolution_spec_char_value<br><br>
+
+          <b>Evidence & summaries</b><br>
+          • usability_parameters_studied<br>
+          • validity_and_reliability_parameters_studied<br>
+          • usability_synthesis<br>
+          • validity_and_reliability_synthesis<br>
+          • usability_date_of_last_search<br>
+          • validity_and_reliability_date_of_last_search<br><br>
+
+          You do <b>not</b> need to provide all of these — any extra details you can share are helpful.
+        </div>
+      `
+    });
+  }
+
+  var hideTimer = null;
+
+  // Show popover on hover
+  $(document).on('mouseenter', '.addinfo-info-btn', function () {
+    var btn = $(this);
+    clearTimeout(hideTimer);
+
+    ensureAddinfoPopover(btn);
+    btn.popover('show');
+
+    $(document).on('mouseenter', '#addinfo-popover', function () {
+      clearTimeout(hideTimer);
+    });
+    $(document).on('mouseleave', '#addinfo-popover', function () {
+      hideTimer = setTimeout(function () { btn.popover('hide'); }, 200);
+    });
+  });
+
+  // Hide on mouseleave
+  $(document).on('mouseleave', '.addinfo-info-btn', function () {
+    var btn = $(this);
+    hideTimer = setTimeout(function () {
+      if (!$('#addinfo-popover:hover').length) {
+        btn.popover('hide');
+      }
+    }, 200);
+  });
+
+});
+
+
 // Data submited
 Shiny.addCustomMessageHandler("dataSubmitted", function(message) {
   alert(message);
@@ -144,6 +265,12 @@ Shiny.addCustomMessageHandler("dataSubmitted", function(message) {
 Shiny.addCustomMessageHandler("emailSubmitted", function(message) {
   alert(message);
 });
+
+
+
+
+
+
 
 
 
