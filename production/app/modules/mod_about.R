@@ -181,7 +181,7 @@ mod_about_ui <- function(id) {
                  collapsible = FALSE,
                  headerBorder = FALSE,
                  p("The goal of RT2 is to develop increasingly sophisticated versions of a cutting-edge, low-burden, ecologically valid ambulatory assessment toolkit to quantify stress in daily life, and to design, test, and iteratively improve stress interventions using that toolkit."), style = "text-align: justify;",
-                 tagList(
+                   # Myrte
                    p(
                      a(
                        href = "https://stress-in-action.nl/myrte-schoenmakers/",
@@ -191,66 +191,136 @@ mod_about_ui <- function(id) {
                          style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
                        )
                      ),
+                     a(
+                       href = "https://www.linkedin.com/in/myrte-schoenmakers-818ab4162/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
                      "Myrte Schoenmakers, PhD student VU Amsterdam"
                    ),
-                 p(
-                   a(
-                     href = "https://stress-in-action.nl/melisa-saygin/",
-                     target = "_blank",
-                     img(
-                       src = "favicon.ico",
-                       style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
-                     )
+
+                   # Melisa
+                   p(
+                     a(
+                       href = "https://stress-in-action.nl/melisa-saygin/",
+                       target = "_blank",
+                       img(
+                         src = "favicon.ico",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
+                       )
+                     ),
+                     a(
+                       href = "https://www.linkedin.com/in/melisa-saygin-760341215/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
+                     "Melisa Saygin, PhD student VU Amsterdam"
                    ),
-                   "Melisa Saygin, PhD student VU Amsterdam"
-                 ),
-                 p(
-                   a(
-                     href = "https://stress-in-action.nl/magdalena-sikora/",
-                     target = "_blank",
-                     img(
-                       src = "favicon.ico",
-                       style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
-                     )
+
+                   # Magdalena
+                   p(
+                     a(
+                       href = "https://stress-in-action.nl/magdalena-sikora/",
+                       target = "_blank",
+                       img(
+                         src = "favicon.ico",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
+                       )
+                     ),
+                     a(
+                       href = "https://www.linkedin.com/in/magdalena-sikora-85231b234/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
+                     "Magdalena Sikora, PhD student University of Twente"
                    ),
-                   "Magdalena Sikora, PhD student University of Twente"
-                 ),
-                 p(
-                   a(
-                     href = "https://stress-in-action.nl/artemis-stefani/",
-                     target = "_blank",
-                     img(
-                       src = "favicon.ico",
-                       style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
-                     )
+
+                   # Artemis
+                   p(
+                     a(
+                       href = "https://stress-in-action.nl/artemis-stefani/",
+                       target = "_blank",
+                       img(
+                         src = "favicon.ico",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
+                       )
+                     ),
+                     a(
+                       href = "https://www.linkedin.com/in/artemis-stefani/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
+                     "Artemis Stefani, PhD - Post Doc VU Amsterdam"
                    ),
-                   "Artemis Stefani, PhD - Post Doc VU Amsterdam"
-                 ),
-                 p(
-                   a(
-                     href = "https://stress-in-action.nl/matthijs-noordzij/",
-                     target = "_blank",
-                     img(
-                       src = "favicon.ico",
-                       style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
-                     )
+
+                   # Matthijs
+                   p(
+                     a(
+                       href = "https://stress-in-action.nl/matthijs-noordzij/",
+                       target = "_blank",
+                       img(
+                         src = "favicon.ico",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
+                       )
+                     ),
+                     a(
+                       href = "https://www.linkedin.com/in/matthijs-noordzij-81a8418/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
+                     "Matthijs Noordzij, Professor in Health Psychology and Technology University of Twente"
                    ),
-                   "Matthijs Noordzij, Professor in Health Psychology and Technology University of Twente"
-                 ),
-                 p(
-                   a(
-                     href = "https://stress-in-action.nl/eco-de-geus/",
-                     target = "_blank",
-                     img(
-                       src = "favicon.ico",
-                       style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
-                     )
-                   ),
-                   "Eco de Geus, Professor of Biological Psychology VU Amsterdam"
-                 )
+
+                   # Eco
+                   p(
+                     a(
+                       href = "https://stress-in-action.nl/eco-de-geus/",
+                       target = "_blank",
+                       img(
+                         src = "favicon.ico",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-right:5px;"
+                       )
+                     ),
+                     a(
+                       href = "https://www.linkedin.com/in/ecodegeus/",
+                       target = "_blank",
+                       img(
+                         src = "linkedin_sia.png",
+                         style = "width:25px; height:25px; vertical-align:middle; margin-left:5px;",
+                         alt = "LinkedIn"
+                       )
+                     ),
+                     br(),
+                     "Eco de Geus, Professor of Biological Psychology VU Amsterdam"
+                   )
                )
              )
-           )
+
     )
   )
   )
