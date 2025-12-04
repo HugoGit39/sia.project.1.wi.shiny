@@ -674,7 +674,7 @@ mod_feat_fil_server <- function(id, data) {
           list(
             "Filter settings" = df_settings,
             "Citations"        = df_citations,
-            "Codebook" = df_codebook
+            "Glossary" = df_codebook
           ),
           path = file
         )

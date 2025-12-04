@@ -30,6 +30,8 @@ mod_sub_data_ui <- function(id) {
             collapsible = FALSE,
             div(
               p(
+                strong("Help us expand the Stress-in-Action Wearables Database (SiA-WD)."), br(),
+                "You can contribute by submitting information about additional wearable devices not yet included. All submitted data will be thoroughly reviewed before inclusion.", br(), br(),
                 "The draft updates live as you type. Complete the mandatory fields ",
                 strong("*", style = "color: #CC6677;"),
                 " to enable submission.",
