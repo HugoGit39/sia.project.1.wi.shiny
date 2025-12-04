@@ -128,11 +128,16 @@ html, body {
   border-radius: 0px !important;
 }
 
-/* Active (selected) pill style */
+/* Ensure all pills (active or not) use normal font weight */
+body .control-sidebar .nav-pills .nav-link,
+body .control-sidebar .nav-pills .nav-link.active {
+  font-weight: normal !important;
+}
+
+/* Active (selected) pill style = filled orange, white text */
 .control-sidebar .nav-pills .nav-link.active {
-  background-color: white !important;
-  color: #f15a29 !important;
-  font-weight: bold;
+  background-color: #f15a29 !important;
+  color: #ffffff !important;
   box-shadow: inset 0 0 0 2px #f15a29 !important;
   border-radius: 0px !important;
 }
@@ -145,8 +150,18 @@ html, body {
   gap: 10px; /* spacing between pills if multiple */
 }
 
+/* Smooth transition for hover */
+.control-sidebar .nav-pills .nav-link,
+.control-sidebar .nav-pills .nav-link.active {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
 
-
-
-
-
+/* FORCE hover: fill orange, text white */
+body .control-sidebar .nav-pills .nav-link:hover,
+body .control-sidebar .nav-pills .nav-link:focus,
+body .control-sidebar .nav-pills .nav-link.active:hover,
+body .control-sidebar .nav-pills .nav-link.active:focus {
+  background-color: #f15a29 !important;
+  color: #ffffff !important;
+  border-color: #f15a29 !important;
+}
