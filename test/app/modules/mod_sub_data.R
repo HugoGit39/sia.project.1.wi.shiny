@@ -19,7 +19,7 @@ mod_sub_data_ui <- function(id) {
         width = 4,
         div(
           style = "
-        max-height: calc(100vh - 100px);  /* adjust if you have navbar/footer */
+        max-height: calc(100vh - 0px);  /* adjust if you have navbar/footer */
         overflow-y: auto;
       ",
           bs4Card(

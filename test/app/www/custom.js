@@ -36,7 +36,7 @@ $(document).ready(function () {
       content: `
         <div id='glossary-popover-prod'
              style='max-height:240px; overflow-y:auto; overflow-x:hidden;
-                    text-align:left; font-size:13px; line-height:1.3; width:420px; padding-right:6px;'>
+                    text-align:left; line-height:1.3; width:420px; padding-right:6px;'>
           <b>Table Information</b><br><br>
 
           <b>SiA Scores</b><br>
@@ -146,6 +146,12 @@ Shiny.addCustomMessageHandler("dataSubmitted", function(message) {
 Shiny.addCustomMessageHandler("emailSubmitted", function(message) {
   alert(message);
 });
+
+
+
+
+
+
 
 
 

@@ -16,7 +16,7 @@ mod_feat_fil_ui <- function(id) {
         width = 3,
         div(
           style = "
-            max-height: calc(100vh - 100px);  /* adjust if you have navbar/footer */
+            max-height: calc(100vh - 0px);  /* adjust if you have navbar/footer */
             overflow-y: auto;
           ",
           bs4Card(
@@ -479,29 +479,123 @@ mod_feat_fil_server <- function(id, data) {
 
         # --- Custom click handler for popup details ---
         onClick = JS(sprintf("
-      function(rowInfo, column) {
-        if (column.id !== 'details') return;
+  function(rowInfo, column) {
+    if (column.id !== 'details') return;
 
-        const values    = rowInfo.values;
-        const infoCols  = %s;
-        let lines = [];
+    const values   = rowInfo.values;
+    const infoCols = %s;
+    let lines = [];
 
-        infoCols.forEach(function(col) {
-          if (values[col] !== undefined && values[col] !== null && values[col] !== '') {
-            lines.push(col + ': ' + values[col]);
-          }
-        });
-
-        if (lines.length === 0) {
-          window.alert('No additional details available for this device.');
-        } else {
-          window.alert(
-            'Details for ' + (values.manufacturer || '') + ' – ' + (values.model || '') + ':\\n\\n' +
-            lines.join('\\n')
-          );
-        }
+    infoCols.forEach(function(col) {
+      if (values[col] !== undefined && values[col] !== null && values[col] !== '') {
+        lines.push(col + ': ' + values[col]);
       }
-    ", info_cols_js))
+    });
+
+    if (lines.length === 0) {
+      window.alert('No additional details available for this device.');
+      return;
+    }
+
+    // ---- create modal once ----
+    let modal = document.getElementById('details-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'details-modal';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%%';
+      modal.style.height = '100%%';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+      modal.style.zIndex = '9999';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.fontFamily = 'inherit';
+
+      const box = document.createElement('div');
+      box.id = 'details-modal-box';
+      box.style.backgroundColor = 'white';
+      box.style.maxWidth = '700px';
+      box.style.width = '90%%';
+      box.style.maxHeight = '80%%';
+      box.style.padding = '20px 20px 16px 20px';
+      box.style.borderRadius = '8px';
+      box.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+      box.style.display = 'flex';
+      box.style.flexDirection = 'column';
+      box.style.position = 'relative';
+      box.style.fontFamily = 'inherit';
+
+      const header = document.createElement('div');
+      header.style.display = 'flex';
+      header.style.justifyContent = 'flex-start';
+      header.style.alignItems = 'center';
+
+      const title = document.createElement('h3');
+      title.id = 'details-modal-title';
+      title.style.margin = '0';
+      title.style.paddingRight = '40px';
+
+      header.appendChild(title);
+      box.appendChild(header);
+
+      const body = document.createElement('pre');
+      body.id = 'details-modal-body';
+      body.style.marginTop = '12px';
+      body.style.whiteSpace = 'pre-wrap';
+      body.style.overflowY = 'auto';  // vertical scrollbar
+      body.style.flex = '1';
+      body.style.fontFamily = 'inherit';
+
+      box.appendChild(body);
+
+      // ---- footer with static SiA blue Close button (bottom-right) ----
+      const footer = document.createElement('div');
+      footer.style.display = 'flex';
+      footer.style.justifyContent = 'flex-end';
+      footer.style.marginTop = '12px';
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.id = 'details-modal-close';
+      closeBtn.textContent = 'Close';
+      closeBtn.style.padding = '6px 16px';
+      closeBtn.style.borderRadius = '4px';
+      closeBtn.style.border = '1px solid #1c75bc';
+      closeBtn.style.background = '#1c75bc';   // SiA blue
+      closeBtn.style.color = 'white';          // white text
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.style.fontSize = '14px';
+      closeBtn.style.fontFamily = 'inherit';
+      closeBtn.style.fontWeight = '500';
+      closeBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+
+      closeBtn.onclick = function() {
+        modal.style.display = 'none';
+      };
+
+      footer.appendChild(closeBtn);
+      box.appendChild(footer);
+
+      modal.appendChild(box);
+      document.body.appendChild(modal);
+
+      // Close when clicking outside the box
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    }
+
+    // ---- update content & show ----
+    const titleText = 'Details for ' + (values.manufacturer || '') + ' \u2013 ' + (values.model || '');
+    document.getElementById('details-modal-title').textContent = titleText;
+    document.getElementById('details-modal-body').textContent  = lines.join('\\n');
+
+    modal.style.display = 'flex';
+  }
+", info_cols_js))
       )
     })
 
