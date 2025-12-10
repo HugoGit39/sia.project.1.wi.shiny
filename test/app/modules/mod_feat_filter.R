@@ -198,7 +198,7 @@ mod_feat_fil_ui <- function(id) {
               status = "secondary",
               collapsible = FALSE,
               sliderInput(
-                ns("validity_and_reliability_n_of_studies"),
+                ns("reliability_and_validity_n_of_studies"),
                 label = "Reliability & Validity Studies (n)",
                 min   = 0,
                 max   = max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE),
@@ -213,7 +213,7 @@ mod_feat_fil_ui <- function(id) {
                 value = c(0, max(df_sia_shiny_filters$usability_n_of_studies, na.rm = TRUE)),
                 step  = 1
               ),
-              selectInput(ns("validity_and_reliability_evidence_level"), "Reliability & Validity Evidence Level", choices = NULL, multiple = TRUE),
+              selectInput(ns("reliability_and_validity_evidence_level"), "Reliability & Validity Evidence Level", choices = NULL, multiple = TRUE),
               selectInput(ns("usability_evidence_level"), "Usability Evidence Level", choices = NULL, multiple = TRUE)
             )
           )

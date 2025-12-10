@@ -167,9 +167,9 @@ rename_map <- c(
   "server_data_storage_spec_boel_value" = "Server Data Storage",
   "dev_storage_cap_hr_spec_num_value" = "Storage (hrs)",
   "dev_storage_cap_mb_spec_num_value" = "Storage (MB)",
-  "validity_and_reliability_n_of_studies" = "Reliability & Validity Studies (n)",
+  "reliability_and_validity_n_of_studies" = "Reliability & Validity Studies (n)",
   "usability_n_of_studies" = "Usability Studies (n)",
-  "validity_and_reliability_evidence_level" = "Reliability & Validity Evidence Level",
+  "reliability_and_validity_evidence_level" = "Reliability & Validity Evidence Level",
   "usability_evidence_level" = "Usability Evidence Level"
 )
 
