@@ -23,7 +23,7 @@ mod_control_ui <- function(id) {
           reactableOutput(ns("wearables_table")) %>% withSpinner()
         ),
         controlbarItem(
-          title = "glossary",
+          title = "Glossary",
           accordion(
             id = "accordion_glossary",
             accordionI(div("A", style='color:#1c75bc; font-size:14px;'), "white", TRUE,  glos$A),

@@ -53,7 +53,7 @@ mod_app_info_ui <- function(id) {
                 br(),
                 "see the ", icon("info-circle", style = "color:#1c75bc;"), " button in the top right for an overview ", br(), "of wearables and glossary.",
                 br(),br(),
-                strong("Updating in Dec/Jan to include 53+ wearables!", style = "color: #f15a29;")
+                strong("Updating in Dec/Jan to include 67+ wearables!", style = "color: #f15a29;")
               )
             )
           )
@@ -80,8 +80,7 @@ mod_app_info_ui <- function(id) {
             "When using the wearables database and/or this web app, you must cite the two papers listed under ",
             strong("Papers to Cite", style = "color: #f15a29;"),
             " and/or ",
-            strong("Research", style = "color: #1c75bc;"),
-            "."
+            strong("Research", style = "color: #1c75bc;"),"."
           ),
           p(strong("Using this app")),
           p(
@@ -100,7 +99,7 @@ mod_app_info_ui <- function(id) {
           ),
           p(
             "For terminology, open the menu in the top right corner and browse the ",
-            strong("Glossary"), ".",
+            strong("Glossary"),".",
             style = "text-align: justify;"
           ),
           p(
@@ -116,7 +115,7 @@ mod_app_info_ui <- function(id) {
             style = "text-align: justify;"
           ),
           p(
-            "Questions? Reach out via ", strong("Contact Us"), ".",
+            "Questions? Reach out via ", strong("Contact Us"),".",
             style = "text-align: justify;"
           )
         )
@@ -135,7 +134,7 @@ mod_app_info_ui <- function(id) {
             collapsible = FALSE,
             headerBorder = FALSE,
             style = "max-height: 300px; overflow-y: auto;",
-            p(strong("December 2025"), br(), "Substantial update: all details wearables available plus improved user expierence (hoovering info etc.)"),
+            p(strong("December 2025"), br(), "Substantial update: all details wearables available plus improved user expierence (hoovering info etc.)."),
             p(strong("September 2025"), br(), "Live release."),
             p(strong("August 2025"), br(), "Tables updated with bars, yes/no and color coded cells."),
             p(strong("July 2025"), br(), "Submit Data module live."),

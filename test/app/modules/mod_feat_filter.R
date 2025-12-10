@@ -193,10 +193,18 @@ mod_feat_fil_ui <- function(id) {
 
             # * Validation, Reliability & Usability ----
             bs4Card(
-              title = "Validation, Reliability & Usability",
+              title = "Reliability, Validity & Usability",
               width = 12,
               status = "secondary",
               collapsible = FALSE,
+              sliderInput(
+                ns("validity_and_reliability_n_of_studies"),
+                label = "Reliability & Validity Studies (n)",
+                min   = 0,
+                max   = max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE),
+                value = c(0, max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE)),
+                step  = 1
+              ),
               sliderInput(
                 ns("usability_n_of_studies"),
                 label = "Usability Studies (n)",
@@ -205,16 +213,8 @@ mod_feat_fil_ui <- function(id) {
                 value = c(0, max(df_sia_shiny_filters$usability_n_of_studies, na.rm = TRUE)),
                 step  = 1
               ),
-              sliderInput(
-                ns("validity_and_reliability_n_of_studies"),
-                label = "Validity & Reliability Studies (n)",
-                min   = 0,
-                max   = max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE),
-                value = c(0, max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE)),
-                step  = 1
-              ),
-              selectInput(ns("usability_evidence_level"), "Usability Evidence Level", choices = NULL, multiple = TRUE),
-              selectInput(ns("validity_and_reliability_evidence_level"), "Validity & Reliability Evidence Level", choices = NULL, multiple = TRUE)
+              selectInput(ns("validity_and_reliability_evidence_level"), "Reliability & Validity Evidence Level", choices = NULL, multiple = TRUE),
+              selectInput(ns("usability_evidence_level"), "Usability Evidence Level", choices = NULL, multiple = TRUE)
             )
           )
         )

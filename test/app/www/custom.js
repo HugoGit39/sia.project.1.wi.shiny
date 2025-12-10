@@ -39,9 +39,9 @@ $(document).ready(function () {
                     text-align:left; line-height:1.3; width:420px; padding-right:6px;'>
           <b>Table Information</b><br><br>
 
-          <b>SiA Scores</b><br>
-          • Long-Term SiA Score — Weighted technical, usability, and reliability score for extended use (>2 week).<br>
-          • Short-Term SiA Score — Weighted technical and validation score for short-term use (≤2 week).<br><br>
+          <b>SiA Expert Scores</b><br>
+          • Long-Term SiA Expert Score  — Weighted technical, usability, and reliability score for extended use (>2 week).<br>
+          • Short-Term SiA Expert Score — Weighted technical and validation score for short-term use (≤2 week).<br><br>
 
           See the Research page for details on scoring, including criteria, procedure involved, and the interrater reliability.<br><br>
 
@@ -89,10 +89,10 @@ $(document).ready(function () {
           • Storage (MB) — Approximate storage capacity in megabytes.<br><br>
 
           <b>Validation, Reliability & Usability</b><br>
+          • Reliability & Validity Studies (n) — Number of studies validating signal quality or reliability.<br>
           • Usability Studies (n) — Number of independent usability or adherence studies.<br>
-          • Validity & Reliability Studies (n) — Number of studies validating signal quality or reliability.<br>
-          • Usability Evidence Level — Evidence quality for usability (external > internal > none).<br>
-          • Validity & Reliability Evidence Level — Evidence quality for validation and reliability (external > internal > none).<br><br>
+          • Reliability & Validity Evidence Level — Evidence quality for validation and reliability (external > internal > none).<br>
+          • Usability Evidence Level — Evidence quality for usability (external > internal > none).<br><br>
 
           For full glossary, see sidebar&nbsp;<i class="fa fa-info-circle" style="color:#1c75bc;"></i>
         </div>
@@ -206,10 +206,10 @@ $(document).ready(function () {
           • parameters_resolution_spec_char_value<br><br>
 
           <b>Evidence & summaries</b><br>
-          • usability_parameters_studied<br>
           • validity_and_reliability_parameters_studied<br>
-          • usability_synthesis<br>
+          • usability_parameters_studied<br>
           • validity_and_reliability_synthesis<br>
+          • usability_synthesis<br>
           • usability_date_of_last_search<br>
           • validity_and_reliability_date_of_last_search<br><br>
 
