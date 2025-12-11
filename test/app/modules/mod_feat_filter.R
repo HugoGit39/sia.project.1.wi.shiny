@@ -201,8 +201,8 @@ mod_feat_fil_ui <- function(id) {
                 ns("reliability_and_validity_n_of_studies"),
                 label = "Reliability & Validity Studies (n)",
                 min   = 0,
-                max   = max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE),
-                value = c(0, max(df_sia_shiny_filters$validity_and_reliability_n_of_studies, na.rm = TRUE)),
+                max   = max(df_sia_shiny_filters$reliability_and_validity_n_of_studies, na.rm = TRUE),
+                value = c(0, max(df_sia_shiny_filters$reliability_and_validity_n_of_studies, na.rm = TRUE)),
                 step  = 1
               ),
               sliderInput(
